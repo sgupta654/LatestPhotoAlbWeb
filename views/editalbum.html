@@ -1,0 +1,86 @@
+<!-- album/edit -->
+{% extends "index.html" %}
+{% block content %}
+<table class="table">
+	<form action="/ilrj0i/pa2/album/edit" method="post">
+		<input type="hidden" name="op" value="changename">
+		<input type="hidden" name="albumid" value="{{albumid}}">
+		Change Name: <input type="text" name="newname">
+		<input type="submit" value="change">
+	</form>
+	Change Permissions:
+	<form action="/ilrj0i/pa2/album/edit" method="post">
+		<input type="hidden" name="albumid" value="{{albumid}}">
+		<input type="hidden" name="op" value="permissions">
+		<input type="hidden" name="type" value="private">
+		<input type="submit" value="private">
+	</form>
+	<form action="/ilrj0i/pa2/album/edit" method="post">
+		<input type="hidden" name="albumid" value="{{albumid}}">
+		<input type="hidden" name="op" value="permissions">
+		<input type="hidden" name="type" value="public">
+		<input type="submit" value="public">
+	</form>
+
+	{% if private == "yes" %}
+	<tr>
+		<td>
+			<p>Username</p>
+		</td>
+		<td>
+			<p>Update Access</p>
+		</td>
+	</tr>
+	{% for accessor in accessors %}
+	<tr>
+		<td>
+			<p>{{accessor[0]}}</p>
+		</td>
+		<td>
+			<form action="/ilrj0i/pa2/album/edit" method="post">
+				<input type="hidden" name="op" value="revokeaccess">
+				<input type="hidden" name="albumid" value="{{albumid}}">
+				<input type="hidden" name="username" value="{{accessor[0]}}">
+				<input type="submit" value="Revoke">
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<form action="/ilrj0i/pa2/album/edit" method="post">
+			<input type="hidden" name="op" value="addaccess">
+			<input type="hidden" name="albumid" value="{{albumid}}">
+			<td>New: <input type="text" name="username"></td>
+			<td><input type="submit" value="Add"></td>
+		</form>
+	<tr>
+	{% endif %}
+	{% for pic in pics %}
+	<tr>
+		<td>
+			<img src="/images/{{pic[1]}}" height="70" width="70"/>
+		</td>
+		<td>
+			<form action="/ilrj0i/pa2/album/edit" method="post">
+				<input type="hidden" name="op" value="delete">
+				<input type="hidden" name="albumid" value="{{albumid}}">
+				<input type="hidden" name="picid" value="{{pic[0]}}">
+				<input type="submit" value="delete">
+			</form>
+		</td>
+	</tr>
+	{% endfor %}
+	<tr>
+		<td>
+			<title>Upload new File</title>
+			<h1>Upload new File</h1>
+			<form action="/ilrj0i/pa2/album/edit" method="post" enctype="multipart/form-data">
+		  	<input type="file" name="file">
+	 	 	<input type="hidden" name="op" value="add">
+	  		<input type="hidden" name="albumid" value="{{albumid}}">
+	  		<input type="submit" value="Add!!!!">
+			</form>
+		</td>
+	</tr>
+</table>
+{% endblock %}
