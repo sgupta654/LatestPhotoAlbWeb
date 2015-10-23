@@ -823,7 +823,91 @@ def viewalbum():
 	return render_template("login.html", login = "no")
 
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
+'''
+@pic.route('/caption', methods=['GET'])
+def pic_caption_get():
+'''	
+    '''
+    Expects URL query parameter with picid.
+    Returns JSON with the picture's current caption or error.
+    {
+        "caption": "current caption"
+    }
+    {
+        "error": "error message",
+        "status": 422
+    }
+    ''' 
+'''    
+    try:
+        picid = get_picid(request)
+    except InvalidPicIDError as err:
+        response = json.jsonify(error='Could not retrieve caption. You did not provide a picture id.', status=404)
+        response.status_code = 404
+        return response
 
+
+    query = "SELECT caption FROM Contain WHERE picid='%s';" % (picid)
+    results = application.execute(query)
+    caption = None
+    if len(results) > 0:
+        caption = results[0][0]
+    else:
+        response = json.jsonify(error='Could not retrieve caption. You did not provide a valid picture id.', status=422)
+        response.status_code = 422
+        return response
+    return json.jsonify(caption=caption)
+
+@pic.route('/caption', methods=['POST'])
+def pic_caption_post():
+'''	
+    '''
+    Expects JSON POST of the format:
+    {
+        "caption": "this is the new caption",
+        "id": "picid"
+    }
+    Updates the caption and sends a response of the format
+    {
+        "caption": "caption",
+        "status": 201
+    }
+    Or if an error occurs:
+    {
+        "error": "error message",
+        "status": 422
+    }
+    ''' 
+'''    
+    req_json = request.get_json()
+
+    picid = req_json.get('id')
+    caption = req_json.get('caption')
+    if picid is None and caption is None:
+        response.json.jsonify(error='Could not update caption. You did not provide a valid picture id or caption.', status=404)
+        response.status_code = 404
+        return response
+    if picid is None:
+        response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
+        response.status_code = 404
+        return 
+    if caption is None:
+        response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
+        response.status_code = 404
+        return response
+
+    try:
+        query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
+        application.update(query)
+    except InvalidPicIDError as e:
+        response = json.jsonify(error='Could not update caption. The picture id was not valid.', status=422)
+        response.status_code = 422
+        return response
+
+    response = json.jsonify(id=picid, status=201)
+    response.status_code = 201
+    return response
+'''
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
