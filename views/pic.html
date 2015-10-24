@@ -18,6 +18,11 @@
 
   {% if access == True %}
     <b>Edit Caption:</b>
+    {% block extrascripts %}
+      <script type="text/javascript">
+          initCaption("{{ picid[0] }}");
+      </script>
+    {% endblock %} 
     <br>
     <textarea name="caption" form="captionform" rows="5" cols="50" wrap="virtual" placeholder="Enter new caption here..." maxlength="255"></textarea>
     <br>
