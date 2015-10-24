@@ -9,10 +9,18 @@
 
 	{% for pic in pic %}
 
-  <img src="/images/{{url[0][0]}}"/>
+  <img src="/static/images/{{url[0][0]}}"/>
 
 
-    <p>{{caption[0][0]}}</p>
+    <!--<p>{{caption[0][0]}}</p>-->
+    <div>
+      <b>Caption: </b><input id="caption" />
+    </div>
+    {% block extrascripts %}
+      <script type="text/javascript">
+        initCaption("{{pic[1]}}");
+      </script>
+    {% endblock %}
     <br>
   </div>
 

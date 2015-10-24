@@ -8,10 +8,10 @@ import os.path
 #import os.urandom
 
 #path to the images folder to store uploaded pictures
-UPLOAD_FOLDER = 'images/'
+UPLOAD_FOLDER = 'static/'
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 
-app = Flask(__name__, template_folder='views', static_folder='images')
+app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
 app.config['MYSQL_USER'] = 'root'
