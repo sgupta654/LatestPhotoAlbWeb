@@ -16,8 +16,10 @@
     <div>
       <b>Caption: </b><input id="caption" />
     </div>
+    {{pic.1}}
     {% block extrascripts %}
       <script type="text/javascript">
+        console.log("{{pic.1}}");
         initCaption("{{pic[1]}}");
       </script>
     {% endblock %}
