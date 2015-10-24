@@ -843,15 +843,21 @@ def viewalbum():
 def pic_caption_get():
 	InvalidPicIDError = ''
 	try:
-		picid = request.args.get('picid')
+		picid = request.args.get('id')
+		print(picid)
 	except InvalidPicIDError as err:
 		response = json.jsonify(error='Could not retrieve caption. You did not provide a picture id.', status=404)
 		response.status_code = 404
 		return response
-
+	print(picid)
 	cursor = mysql.connection.cursor()
-	query = "SELECT caption FROM Contain WHERE picid='%s';" % (picid)
-	results = cursor.execute(query)
+	#query = "SELECT caption FROM Contain WHERE picid='%s';" % (picid)
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'" + picid + "'"
+	#results = cursor.execute(query)
+	cursor.execute(query)
+	results = cursor.fetchall()
+	print("HI")
+	print(results)
 	caption = None
 	if len(results) > 0:
 		caption = results[0][0]
@@ -859,6 +865,7 @@ def pic_caption_get():
 		response = json.jsonify(error='Could not retrieve caption. You did not provide a valid picture id.', status=422)
 		response.status_code = 422
 		return response
+	print(caption)
 	return json.jsonify(caption=caption)
 
 @app.route('/ilrj0i/pa3/pic/caption', methods=['POST'])

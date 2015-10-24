@@ -1,5 +1,6 @@
 // caption.js
 function Caption(element, picid, caption) {
+  console.log("hi");
   this.element = element;
   this.picid = picid;
   element.value = caption; // objects in Javascript are assigned by reference, so this works
@@ -24,6 +25,7 @@ Caption.prototype.update = function(caption) {
 }
 
 function makeCaptionRequest(picid, cb) {
+  console.log("MAKECAPTIONREQUEST:");
   qwest.get('/ilrj0i/pa3/pic/caption?id=' + picid)
     .then(function(xhr, resp) {
       cb(resp);
@@ -45,7 +47,6 @@ function makeCaptionPostRequest(picid, caption, cb) {
 }
 
 function initCaption(picid) {
-  console.log("YOOOOOOOO" + picid);
   var caption = document.getElementById("caption");
   var captionBinding = new Caption(caption, picid);
 
