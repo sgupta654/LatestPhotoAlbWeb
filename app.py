@@ -14,10 +14,10 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'my_password'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa2'
+app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 
@@ -827,7 +827,7 @@ def viewalbum():
 @pic.route('/caption', methods=['GET'])
 def pic_caption_get():
 '''	
-    '''
+'''
     Expects URL query parameter with picid.
     Returns JSON with the picture's current caption or error.
     {
@@ -837,7 +837,7 @@ def pic_caption_get():
         "error": "error message",
         "status": 422
     }
-    ''' 
+''' 
 '''    
     try:
         picid = get_picid(request)
@@ -861,7 +861,7 @@ def pic_caption_get():
 @pic.route('/caption', methods=['POST'])
 def pic_caption_post():
 '''	
-    '''
+'''
     Expects JSON POST of the format:
     {
         "caption": "this is the new caption",
@@ -877,7 +877,7 @@ def pic_caption_post():
         "error": "error message",
         "status": 422
     }
-    ''' 
+''' 
 '''    
     req_json = request.get_json()
 
