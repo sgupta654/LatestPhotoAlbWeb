@@ -17,13 +17,17 @@ mysql = MySQL()
 app.config['MYSQL_USER'] = 'group36'
 app.config['MYSQL_PASSWORD'] = 'GOOCH'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa2'
+app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
+#app.register_blueprint(contollers.album)
+#album.py
+#albums = Blueprint('albums', __name__, template folder='views')
+#
 
 #put this line before the route for the url
-#   /ilrj0i/pa2
-#i.e. for /user => /ilrj0i/pa2
+#   /ilrj0i/pa3
+#i.e. for /user => /ilrj0i/pa3
 
 # USER CLASS FOR PASSWORD HASHING
 # http://code.tutsplus.com/tutorials/intro-to-flask-signing-in-and-out--net-29982
@@ -81,7 +85,7 @@ def requires_auth(f):
 	return decorated"""
 
 
-@app.route('/ilrj0i/pa2/', methods=['GET'])
+@app.route('/ilrj0i/pa3/', methods=['GET'])
 def main_route():
 
 	# The next line gets the global application object
@@ -129,7 +133,7 @@ def main_route():
 #if op==signin
 #OTHER AUTHENTICATION SHIT!!!
 
-@app.route('/ilrj0i/pa2/', methods=['POST'])
+@app.route('/ilrj0i/pa3/', methods=['POST'])
 def userloginpost():
 	#checks database for username
 	username = request.form['username']
@@ -162,7 +166,7 @@ def userloginpost():
 	albums = albums + tuple(set(albumsadd2)-set(albums))
 	return render_template("index.html", albums = albums, username = username, login = "yes")
 
-@app.route('/ilrj0i/pa2/user', methods=['GET'])
+@app.route('/ilrj0i/pa3/user', methods=['GET'])
 def signup():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -180,7 +184,7 @@ def signup():
 		return render_template("edituser.html", username = username, login = "yes")
 	return render_template("user.html", login = "no")
 
-@app.route('/ilrj0i/pa2/user', methods=['POST'])
+@app.route('/ilrj0i/pa3/user', methods=['POST'])
 def createaccount():
 	###session?
 	username = request.form['username']
@@ -214,7 +218,7 @@ def createaccount():
 	return render_template("index.html", albums = albums, username = username, login = "yes")
 
 
-@app.route('/ilrj0i/pa2/user/edit', methods=['GET'])
+@app.route('/ilrj0i/pa3/user/edit', methods=['GET'])
 def edituserget():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -232,7 +236,7 @@ def edituserget():
 		return render_template("edituser.html", username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
-@app.route('/ilrj0i/pa2/user/edit', methods=['POST'])
+@app.route('/ilrj0i/pa3/user/edit', methods=['POST'])
 def edituserpost():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -267,13 +271,13 @@ def edituserpost():
 		return render_template("index.html", username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
-@app.route('/ilrj0i/pa2/user/login', methods=['GET'])
+@app.route('/ilrj0i/pa3/user/login', methods=['GET'])
 def userloginget():
 	return render_template("login.html", login = "no")
 
 
 
-@app.route('/ilrj0i/pa2/user/delete', methods=['POST'])
+@app.route('/ilrj0i/pa3/user/delete', methods=['POST'])
 def deleteuser():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -300,7 +304,7 @@ def deleteuser():
 	return render_template("login.html", login = "no")
 
 
-@app.route('/ilrj0i/pa2/user/logout')
+@app.route('/ilrj0i/pa3/user/logout')
 def logout():
 	if 'username' in session:
 		#if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -319,7 +323,7 @@ def logout():
 	return render_template("login.html", login = "no")
 
 
-@app.route('/ilrj0i/pa2/albums')
+@app.route('/ilrj0i/pa3/albums')
 def albumsss():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -346,7 +350,7 @@ def albumsss():
 	return render_template("albums.html", albums = albums, login = "no")
 
 
-@app.route('/ilrj0i/pa2/album')
+@app.route('/ilrj0i/pa3/album')
 def albumfunc():
 	#import pdb; pdb.set_trace()
 
@@ -415,7 +419,7 @@ ONLY ACCESSIBLE ONES ARE DISPLAYED
 
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
 
-@app.route('/ilrj0i/pa2/pic', methods=['GET'])
+@app.route('/ilrj0i/pa3/pic', methods=['GET'])
 def pic():
 	cursor = mysql.connection.cursor()
 	requestpicid = request.args.get('id')
@@ -518,7 +522,7 @@ def pic():
 
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
 
-@app.route('/ilrj0i/pa2/pic', methods=['POST'])
+@app.route('/ilrj0i/pa3/pic', methods=['POST'])
 def editpics():
 	#import pdb; pdb.set_trace()
 	cursor = mysql.connection.cursor()
@@ -601,7 +605,7 @@ def editpics():
 
 
 
-@app.route('/ilrj0i/pa2/albums/edit', methods=['POST'])
+@app.route('/ilrj0i/pa3/albums/edit', methods=['POST'])
 def editalbums():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -651,7 +655,7 @@ def editalbums():
 			return render_template("editalbums.html", albums = albums, username = username, login = "yes")
 	return render_template("login.html", login = "no")
 
-@app.route('/ilrj0i/pa2/albums/edit', methods=['GET'])
+@app.route('/ilrj0i/pa3/albums/edit', methods=['GET'])
 def vieweditalbums():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -685,7 +689,7 @@ def secure_filename(filename):
 	now = datetime.now()
 	return (filename.rsplit('.', 1)[0] + "_" + str(now.year) + str(now.month) + str(now.day) + "_" + str(now.hour) + str(now.minute) + str(now.second))
 
-@app.route('/ilrj0i/pa2/album/edit', methods=['POST'])
+@app.route('/ilrj0i/pa3/album/edit', methods=['POST'])
 def editalbum():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -785,7 +789,7 @@ def editalbum():
 	#if request.form['op'] == 'add':
 		################
 
-@app.route('/ilrj0i/pa2/album/edit', methods=['GET'])
+@app.route('/ilrj0i/pa3/album/edit', methods=['GET'])
 def viewalbum():
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -823,11 +827,12 @@ def viewalbum():
 	return render_template("login.html", login = "no")
 
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
-'''
-@pic.route('/caption', methods=['GET'])
+
+@app.route('/ilrj0i/pa3/pic/caption', methods=['GET'])
 def pic_caption_get():
-'''	
+	
     '''
+
     Expects URL query parameter with picid.
     Returns JSON with the picture's current caption or error.
     {
@@ -838,7 +843,7 @@ def pic_caption_get():
         "status": 422
     }
     ''' 
-'''    
+
     try:
         picid = get_picid(request)
     except InvalidPicIDError as err:
@@ -858,9 +863,9 @@ def pic_caption_get():
         return response
     return json.jsonify(caption=caption)
 
-@pic.route('/caption', methods=['POST'])
+@app.route('/ilrj0i/pa3/pic/caption', methods=['POST'])
 def pic_caption_post():
-'''	
+
     '''
     Expects JSON POST of the format:
     {
@@ -878,7 +883,7 @@ def pic_caption_post():
         "status": 422
     }
     ''' 
-'''    
+
     req_json = request.get_json()
 
     picid = req_json.get('id')
@@ -907,7 +912,7 @@ def pic_caption_post():
     response = json.jsonify(id=picid, status=201)
     response.status_code = 201
     return response
-'''
+
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
