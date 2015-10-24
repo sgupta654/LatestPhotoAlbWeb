@@ -24,7 +24,7 @@ Caption.prototype.update = function(caption) {
 }
 
 function makeCaptionRequest(picid, cb) {
-  qwest.get('/secretkey/pa3/pic/caption?id=' + picid)
+  qwest.get('/ilrj0i/pa3/pic/caption?id=' + picid)
     .then(function(xhr, resp) {
       cb(resp);
     });
@@ -36,7 +36,7 @@ function makeCaptionPostRequest(picid, caption, cb) {
     'caption': caption
   };
 
-  qwest.post('/secretkey/pa3/pic/caption', data, {
+  qwest.post('/ilrj0i/pa3/pic/caption', data, {
     dataType: 'json',
     responseType: 'json'
   }).then(function(xhr, resp) {

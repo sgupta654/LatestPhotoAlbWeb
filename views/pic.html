@@ -9,45 +9,38 @@
 
 	{% for pic in pic %}
 
-  <img src="/images/{{url[0][0]}}"/>
+  <img src="/static/images/{{url[0][0]}}"/>
 
 
-    <p>{{pic[2]}}</p>
-    <br>
-  </div>
-
+    <!--<p>{{caption[0][0]}}</p>-->
   {% if access == True %}
-    <b>Edit Caption:</b>
-    {% block extrascripts %}
-      <script type="text/javascript">
-          initCaption("{{ picid[0] }}");
-      </script>
-    {% endblock %} 
-    <br>
-    <textarea name="caption" form="captionform" rows="5" cols="50" wrap="virtual" placeholder="Enter new caption here..." maxlength="255"></textarea>
-    <br>
-    <form action="/ilrj0i/pa2/pic" id="captionform" method="POST">
-      <input type="hidden" name="albumid" value="{{album_info[0][0]}}">
-      <input type="hidden" name="picid" value="{{pic[0]}}">
-      <input type="submit" value="Update Caption">
-    </form>
+    <div>
+        <b>Caption: </b><input id="caption" />
+      </div>
+      {% block extrascripts %}
+        <script type="text/javascript">
+          initCaption("{{pic[0]}}");
+        </script>
+      {% endblock %}
+      <br>
+    </div>
   {% endif %}
 
   <div class="text-center">
     {% for previous in previous %}
-    <form action="/ilrj0i/pa2/pic" method="get">
+    <form action="/ilrj0i/pa3/pic" method="get">
       <input type="hidden" name="op" value="nav">
-      <input type="hidden" name="id" value="{{previous[1]}}">
-      <input type="hidden" name="albid" value="{{previous[0]}}">
+      <input type="hidden" name="picid" value="{{previous[1]}}">
+      <input type="hidden" name="albumid" value="{{previous[0]}}">
       <input type="hidden" name="sequencenum" value="{{previous[3]}}">
       <input type="submit" value="Previous">
     </form>
     {% endfor %}
     {% for next in next %}
-    <form action="/ilrj0i/pa2/pic" method="get">
+    <form action="/ilrj0i/pa3/pic" method="get">
       <input type="hidden" name="op" value="nav">
-      <input type="hidden" name="id" value="{{next[1]}}">
-      <input type="hidden" name="albid" value="{{next[0]}}">
+      <input type="hidden" name="picid" value="{{next[1]}}">
+      <input type="hidden" name="albumid" value="{{next[0]}}">
       <input type="hidden" name="sequencenum" value="{{next[3]}}">
       <input type="submit" value="Next">
     </form>
