@@ -45,6 +45,7 @@ function makeCaptionPostRequest(picid, caption, cb) {
 }
 
 function initCaption(picid) {
+  console.log("YOOOOOOOO" + picid);
   var caption = document.getElementById("caption");
   var captionBinding = new Caption(caption, picid);
 

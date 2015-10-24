@@ -15,11 +15,13 @@
     <!--<p>{{caption[0][0]}}</p>-->
   {% if access == True %}
     <div>
-        <b>Caption: </b><input id="caption" />
+      <b>Caption: </b><input id="caption" />
       </div>
+      {{pic.1}}
       {% block extrascripts %}
         <script type="text/javascript">
-          initCaption("{{pic[0]}}");
+          console.log("{{pic.1}}");
+          initCaption("{{pic[1]}}");
         </script>
       {% endblock %}
       <br>
