@@ -2,7 +2,7 @@
 {% block content %}
 	<h1 class="text-center"> Change Account Information </h1>
 	{% if passnotcorrect == "no" %}
-		<form action="/ilrj0i/pa2/user/edit" method="POST">
+		<form action="/ilrj0i/pa3/user/edit" method="POST">
 			<input type="hidden" name="username" value="{{username}}">
 
 			Change First Name: <input type="text" value="{{firstname}}" name="firstname" pattern="^[A-Za-z-]{1,20}$" required title="Letters and hyphen ONLY! 1 character minimum and 20 characters maximum" required/>
@@ -33,7 +33,7 @@
 		</form>
 
 	{% else %}
-		<form action="/ilrj0i/pa2/user/edit" method="POST">
+		<form action="/ilrj0i/pa3/user/edit" method="POST">
 			<input type="hidden" name="username" value="{{username}}">
 
 			Change First Name: <input type="text" name="firstname" pattern="^[A-Za-z-]{1,20}$" required title="Letters and hyphen ONLY! 1 character minimum and 20 characters maximum" required/>
@@ -64,7 +64,7 @@
 		</form>
 	{% endif %}
 
-	<form action="ilrj0i/pa2/user/delete" method="POST">
+	<form action="ilrj0i/pa3/user/delete" method="POST">
 		<input type="hidden" name="username" value="{{username}}">
 		<input type="submit" value="DELETE ACCOUNT">
 	</form>

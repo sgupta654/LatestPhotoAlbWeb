@@ -15,9 +15,9 @@ app = Flask(__name__, template_folder='views', static_folder='images')
 mysql = MySQL()
 
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'my_password'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa3'
+app.config['MYSQL_DB'] = 'group36'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 #app.register_blueprint(contollers.album)
@@ -830,17 +830,6 @@ def viewalbum():
 
 @app.route('/ilrj0i/pa3/pic/caption', methods=['GET'])
 def pic_caption_get():
-
-    Expects URL query parameter with picid.
-    Returns JSON with the picture's current caption or error.
-    {
-        "caption": "current caption"
-    }
-    {
-        "error": "error message",
-        "status": 422
-    }
-
     try:
         picid = get_picid(request)
     except InvalidPicIDError as err:
@@ -862,23 +851,6 @@ def pic_caption_get():
 
 @app.route('/ilrj0i/pa3/pic/caption', methods=['POST'])
 def pic_caption_post():
-
-    Expects JSON POST of the format:
-    {
-        "caption": "this is the new caption",
-        "id": "picid"
-    }
-    Updates the caption and sends a response of the format
-    {
-        "caption": "caption",
-        "status": 201
-    }
-    Or if an error occurs:
-    {
-        "error": "error message",
-        "status": 422
-    }
-
     req_json = request.get_json()
 
     picid = req_json.get('id')
