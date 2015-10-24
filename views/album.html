@@ -17,9 +17,9 @@
 	{% for pic in pics %}
 	<!-- ordered by sequencenum -->
 		<form action="/ilrj0i/pa3/pic" method="get">
-			<input type="hidden" name="id" value="{{pic[0]}}">
+			<input type="hidden" name="picid" value="{{pic[0]}}">
 			<input type="hidden" name="url" value="{{pic[1]}}">
-			<input type="hidden" name="albid" value="{{album_info[0][0]}}">
+			<input type="hidden" name="albumid" value="{{album_info[0][0]}}">
 			<!--<input type="hidden" name="doit" value="false"}-->
 			<p>Date: {{pic[3]}}</p>
 			<input type="image" src="/images/{{pic[1]}}" height="70" width="70">

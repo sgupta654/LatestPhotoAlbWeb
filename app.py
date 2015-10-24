@@ -422,8 +422,8 @@ ONLY ACCESSIBLE ONES ARE DISPLAYED
 @app.route('/ilrj0i/pa3/pic', methods=['GET'])
 def pic():
 	cursor = mysql.connection.cursor()
-	requestpicid = request.args.get('id')
-	albumid = request.args.get('albid')
+	requestpicid = request.args.get('picid')
+	albumid = request.args.get('albumid')
 	access = False
 
 	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
@@ -440,13 +440,16 @@ def pic():
 
 
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + str(pic[0][3]) + ")"
-	print(query)
 	cursor.execute(query)
 	previous = cursor.fetchall()
 
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' +  str(pic[0][3]) + ")"
 	cursor.execute(query)
 	next = cursor.fetchall()
+
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall()
 
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -477,7 +480,7 @@ def pic():
 		"""
 		if username == album_info[0][4]:
 			access = True
-		return render_template("pic.html", pic = pic, url = url, username = username, album_info = album_info, previous = previous, next = next, access = access, login = "yes")
+		return render_template("pic.html", pic = pic, url = url, username = username, album_info = album_info, caption = caption, previous = previous, next = next, access = access, login = "yes")
 
 		#import pdb; pdb.set_trace()
 
@@ -488,7 +491,7 @@ def pic():
 	"""
 		#return str(picarr)
 	#return str(picarr)
-	return render_template("pic.html", pic = pic, url = url, album_info = album_info, previous = previous, next = next, access = access, login = "no")
+	return render_template("pic.html", pic = pic, url = url, album_info = album_info, caption = caption, previous = previous, next = next, access = access, login = "no")
 	#import pdb; pdb.set_trace()
 """
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
@@ -551,21 +554,25 @@ def editpics():
 	cursor.execute(query)
 	caption = cursor.fetchall()
 """
-
 	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	album_info = cursor.fetchall()
 
-	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "'"		##and albumid?
+	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "' AND albumid=" + "'" + albumid + "'"		##and albumid?
 	cursor.execute(query)
 	pic = cursor.fetchall()
 
-	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + "'" + sequencenum + "'" +")'"
+	query = '''SELECT url FROM Photo WHERE picid=''' + "'" + requestpicid + "'"
+	cursor.execute(query)
+	url = cursor.fetchall()
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + str(pic[0][3]) + ")"
 	cursor.execute(query)
 	previous = cursor.fetchall()
-	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = '(SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' + "'" + sequencenum + "'" +")'"
+
+	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' +  str(pic[0][3]) + ")"
 	cursor.execute(query)
 	next = cursor.fetchall()
+
 
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
@@ -580,7 +587,7 @@ def editpics():
 		session['lastactivity'] = datetime.now()
 		username = session['username']
 
-		if username == album_owner[0][0]:
+		if username == album_info[0][4]:
 			access = True
 			caption_new = request.form['caption']
 			lastupdated = str(datetime.now().date())
@@ -594,9 +601,13 @@ def editpics():
 			cursor.execute(query)
 			caption = cursor.fetchall()
 
-		return render_template("pic.html", pic = pic, username = username, album_info = album_info, access = access, login = "yes")
+		return render_template("pic.html", pic = pic, url = url, username = username, album_info = album_info, caption = caption, previous = previous, next = next, access = access, login = "yes")
 
-	return render_template("pic.html", pic = pic, album_info = album_info, access = access, login="no")
+	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
+	cursor.execute(query)
+	caption = cursor.fetchall()
+
+	return render_template("pic.html", pic = pic, url = url, album_info = album_info, caption = caption, previous = previous, next = next, access = access, login = "no")
 """
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
