@@ -903,12 +903,7 @@ def pic_caption_post():
 	response.status_code = 201
 	return response
 
-<<<<<<< HEAD
-"""@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
-=======
-
 @api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
->>>>>>> a56fa60b3aebc71e25c196e8539dd3ef7ae926f2
 def favorites(id):
 
 	try:
@@ -924,7 +919,8 @@ def favorites(id):
 	cursor.execute(query)
 	favorites = cursor.fetchall()
 	num_favorites = len(favorites)
-	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite)'''
+	#query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite)'''
+	query = '''SELECT username FROM Favorite HAVING date=max(date)'''
 	cursor.execute(query)
 	latest_favorite = cursor.fetchall()
 
@@ -991,7 +987,7 @@ def comment_to_jsonapi(comment):
 	attributes["date"] = attributes["date"].isoformat()
 	del attributes["commentid"]
 	rv["attributes"] = attributes
-	return rv """
+	return rv
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
