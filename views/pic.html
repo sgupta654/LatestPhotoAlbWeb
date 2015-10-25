@@ -12,23 +12,23 @@
   <img src="/static/images/{{url[0][0]}}"/>
 
 
+    {% if access == True %}
     <div>
       <b>Favorites: </b><div id="favorite" />
       <b>Last Favorite by: </b><div id="latestfave" />
       <b>Caption: </b><input id="caption" />
     </div>
-    {{pic[1]}}
-
-      hello! {{pic[1]}} hello!
       <script type="text/javascript">
         initCaption("{{pic[1]}}");
       </script>
     <br>
+    {% else %}
+    <div>
+      <b> Caption: </b>{{pic[2]}}
+    </dvi>
+    {% endif %}
+
   </div>
-
-  {% if access == True %}
-
-  {% endif %}
 
   <div class="text-center">
     {% for previous in previous %}

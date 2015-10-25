@@ -40,22 +40,22 @@ mysql.init_app(app)
   pwdhash = db.Column(db.String(54))
 
   def __init__(self, firstname, lastname, email, password):
-	self.firstname = firstname.title()
-	self.lastname = lastname.title()
-	self.email = email.lower()
-	self.set_password(password)
+    self.firstname = firstname.title()
+    self.lastname = lastname.title()
+    self.email = email.lower()
+    self.set_password(password)
 
   def set_password(self, password):
-	self.pwdhash = generate_password_hash(password)
+    self.pwdhash = generate_password_hash(password)
 
   def check_password(self, password):
-	return check_password_hash(self.pwdhash, password)"""
+    return check_password_hash(self.pwdhash, password)"""
 
 # CREATING AN INSTANCE OF THE User CLASS
 
 """newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
-	  db.session.add(newuser)
-	  db.session.commit()"""
+      db.session.add(newuser)
+      db.session.commit()"""
 
 
 
@@ -841,9 +841,11 @@ def viewalbum():
 
 @app.route('/ilrj0i/pa3/pic/caption', methods=['GET'])
 def pic_caption_get():
+
 	InvalidPicIDError = ''
 	try:
 		picid = request.args.get('id')
+		print(picid)
 	except InvalidPicIDError as err:
 		response = json.jsonify(error='Could not retrieve caption. You did not provide a picture id.', status=404)
 		response.status_code = 404
@@ -855,6 +857,8 @@ def pic_caption_get():
 	#results = cursor.execute(query)
 	cursor.execute(query)
 	results = cursor.fetchall()
+	print("HI")
+	print(results)
 	caption = None
 	if len(results) > 0:
 		caption = results[0][0]
@@ -862,10 +866,13 @@ def pic_caption_get():
 		response = json.jsonify(error='Could not retrieve caption. You did not provide a valid picture id.', status=422)
 		response.status_code = 422
 		return response
+	print(caption)
 	return json.jsonify(caption=caption)
+
 
 @app.route('/ilrj0i/pa3/pic/caption', methods=['POST'])
 def pic_caption_post():
+
 	InvalidPicIDError = ''
 	req_json = request.get_json()
 	cursor = mysql.connection.cursor()
@@ -883,7 +890,6 @@ def pic_caption_post():
 		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
 		response.status_code = 404
 		return response
-
 	try:
 		query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
 		cursor.execute(query)
@@ -893,12 +899,16 @@ def pic_caption_post():
 		response = json.jsonify(error='Could not update caption. The picture id was not valid.', status=422)
 		response.status_code = 422
 		return response
-
 	response = json.jsonify(id=picid, status=201)
 	response.status_code = 201
 	return response
 
+<<<<<<< HEAD
 """@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
+=======
+
+@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
+>>>>>>> a56fa60b3aebc71e25c196e8539dd3ef7ae926f2
 def favorites(id):
 
 	try:
