@@ -56,5 +56,5 @@ function initFavorite(picid) {
    makeFavoriteRequest(picid, function(resp) {
       favoriteBinding.change(resp['favorite']);
     }); 
-  }, 7000);
+  }, 100);
 }
