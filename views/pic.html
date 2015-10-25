@@ -7,6 +7,7 @@
   <div class="text-center">
   <h3>{{album_info[0][4]}}</h3>
 
+<<<<<<< HEAD
   	{% for pic in pic %}
 
     <img src="/static/images/{{url[0][0]}}"/>
@@ -32,6 +33,17 @@
         <input type="submit" value="Next">
       </form>
       {% endfor %}
+=======
+	{% for pic in pic %}
+
+  <img src="/static/images/{{url[0][0]}}"/>
+
+
+    <div>
+      <b>Favorites: </b><div id="favorite" />
+      <b>Last Favorite by: </b><div id="latestfave" />
+      <b>Caption: </b><input id="caption" />
+>>>>>>> origin/master
     </div>
     {% endfor %}
 {% endblock %}

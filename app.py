@@ -907,6 +907,91 @@ def pic_favorite_get():
 """
 
 
+@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
+def favorites(id):
+	
+	try:
+		picid = request.args.get('id')
+		
+	except RecordNotFound as e:
+		response = json.jsonify(errors=[e.to_json()])
+		response.status_code = 404
+		return response
+
+	cursor = mysql.connection.cursor()
+	query = '''SELECT * FROM Favorite WHERE picid=''' + "'" + picid + "'"
+	cursor.execute(query)
+	favorites = cursor.fetchall()
+	num_favorites = len(favorites)
+	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite)'''
+	cursor.execute(query)
+	latest_favorite = cursor.fetchall()
+
+	data = {
+		"id": picid,
+		"num_favorites": num_favorites,
+		"lastest_favorite": latest_favorite
+	}
+	return json.jsonify(data=data)
+
+def malformed_request():
+	error = {
+				"status": "400",
+				"title": "Bad Request",
+				"detail": "Your request could not be parsed. Please verify it is a valid JSON object."
+			}
+	return error
+
+def comment_to_jsonapi(comment):
+	rv = {
+			"type": "comments",
+			"id": comment.commentid
+		}
+	attributes = comment._asdict()
+	attributes["date"] = attributes["date"].isoformat()
+	del attributes["commentid"]
+	rv["attributes"] = attributes
+	return rv
+
+@api.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
+def favorites(id):
+	
+	try:
+		favorite = request.args.get('id')
+	except RecordNotFound as e:
+		response = json.jsonify(errors=[e.to_json()])
+		response.status_code = 404
+		return response
+
+	data = {
+		"type": "favorites",
+		"id": id,
+		"attributes": {
+			"username": favorite.username,
+			"datetime": favorite.date.isoformat()
+		}
+	}
+	return json.jsonify(data=data)
+
+def malformed_request():
+	error = {
+				"status": "400",
+				"title": "Bad Request",
+				"detail": "Your request could not be parsed. Please verify it is a valid JSON object."
+			}
+	return error
+
+def comment_to_jsonapi(comment):
+	rv = {
+			"type": "comments",
+			"id": comment.commentid
+		}
+	attributes = comment._asdict()
+	attributes["date"] = attributes["date"].isoformat()
+	del attributes["commentid"]
+	rv["attributes"] = attributes
+	return rv
+
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
