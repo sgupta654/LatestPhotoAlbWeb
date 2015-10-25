@@ -33,7 +33,7 @@ function makeFavoriteRequest(picid, cb) {
 function makeFavoritePostRequest(picid, favorite, cb) {
   var data = {
     'id': picid,
-    'Favorite': favorite
+    'favorite': favorite
   };
 
   qwest.post('/ilrj0i/pa3/pic/favorite', data, {
@@ -49,12 +49,12 @@ function initFavorite(picid) {
   var favoriteBinding = new Favorite(favorite, picid);
 
   makeFavoriteRequest(picid, function(resp) {
-    favoriteBinding.change(resp['Favorite']);
+    favoriteBinding.change(resp['favorite']);
   });
 
   setInterval(function() {
    makeFavoriteRequest(picid, function(resp) {
-      favoriteBinding.change(resp['Favorite']);
+      favoriteBinding.change(resp['favorite']);
     }); 
   }, 7000);
 }
