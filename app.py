@@ -872,41 +872,43 @@ def pic_caption_get():
 
 @app.route('/ilrj0i/pa3/pic/caption', methods=['POST'])
 def pic_caption_post():
-    req_json = request.get_json()
 
-    picid = req_json.get('id')
-    caption = req_json.get('caption')
-    if picid is None and caption is None:
-        response.json.jsonify(error='Could not update caption. You did not provide a valid picture id or caption.', status=404)
-        response.status_code = 404
-        return response
-    if picid is None:
-        response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
-        response.status_code = 404
-        return 
-    if caption is None:
-        response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
-        response.status_code = 404
-        return response
-
-    try:
-        query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
-        application.update(query)
-    except InvalidPicIDError as e:
-        response = json.jsonify(error='Could not update caption. The picture id was not valid.', status=422)
-        response.status_code = 422
-        return response
-
-    response = json.jsonify(id=picid, status=201)
-    response.status_code = 201
-    return response
+	InvalidPicIDError = ''
+	req_json = request.get_json()
+	cursor = mysql.connection.cursor()
+	picid = req_json.get('id')
+	caption = req_json.get('caption')
+	if picid is None and caption is None:
+		response.json.jsonify(error='Could not update caption. You did not provide a valid picture id or caption.', status=404)
+		response.status_code = 404
+		return response
+	if picid is None:
+		response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
+		response.status_code = 404
+		return 
+	if caption is None:
+		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
+		response.status_code = 404
+		return response
+	try:
+		query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
+		cursor.execute(query)
+		mysql.connection.commit()
+		#commit?
+	except InvalidPicIDError as e:
+		response = json.jsonify(error='Could not update caption. The picture id was not valid.', status=422)
+		response.status_code = 422
+		return response
+	response = json.jsonify(id=picid, status=201)
+	response.status_code = 201
+	return response
 
 """
 @app.route('/ilrj0i/pa3/pic/caption', method=['GET'])
 def pic_favorite_get():
 """
 
-
+"""
 @api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
 def favorites(id):
 	
@@ -990,7 +992,7 @@ def comment_to_jsonapi(comment):
 	attributes["date"] = attributes["date"].isoformat()
 	del attributes["commentid"]
 	rv["attributes"] = attributes
-	return rv
+	return rv"""
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

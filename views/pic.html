@@ -7,44 +7,53 @@
   <div class="text-center">
   <h3>{{album_info[0][4]}}</h3>
 
-<<<<<<< HEAD
-  	{% for pic in pic %}
-
-    <img src="/static/images/{{url[0][0]}}"/>
-
-
-
-    <div class="text-center">
-      {% for previous in previous %}
-      <form action="/ilrj0i/pa3/pic" method="get">
-        <input type="hidden" name="op" value="nav">
-        <input type="hidden" name="picid" value="{{previous[1]}}">
-        <input type="hidden" name="albumid" value="{{previous[0]}}">
-        <input type="hidden" name="sequencenum" value="{{previous[3]}}">
-        <input type="submit" value="Previous">
-      </form>
-      {% endfor %}
-      {% for next in next %}
-      <form action="/ilrj0i/pa3/pic" method="get">
-        <input type="hidden" name="op" value="nav">
-        <input type="hidden" name="picid" value="{{next[1]}}">
-        <input type="hidden" name="albumid" value="{{next[0]}}">
-        <input type="hidden" name="sequencenum" value="{{next[3]}}">
-        <input type="submit" value="Next">
-      </form>
-      {% endfor %}
-=======
 	{% for pic in pic %}
 
   <img src="/static/images/{{url[0][0]}}"/>
 
 
+    {% if access == True %}
     <div>
       <b>Favorites: </b><div id="favorite" />
       <b>Last Favorite by: </b><div id="latestfave" />
       <b>Caption: </b><input id="caption" />
->>>>>>> origin/master
     </div>
+      <script type="text/javascript">
+        initCaption("{{pic[1]}}");
+      </script>
+    <br>
+    {% else %}
+    <div>
+      <b> Caption: </b>{{pic[2]}}
+    </dvi>
+    {% endif %}
+
+  </div>
+
+
+  {% if access == True %}
+  {% endif %}
+
+  <div class="text-center">
+    {% for previous in previous %}
+    <form action="/ilrj0i/pa3/pic" method="get">
+      <input type="hidden" name="op" value="nav">
+      <input type="hidden" name="picid" value="{{previous[1]}}">
+      <input type="hidden" name="albumid" value="{{previous[0]}}">
+      <input type="hidden" name="sequencenum" value="{{previous[3]}}">
+      <input type="submit" value="Previous">
+    </form>
     {% endfor %}
+    {% for next in next %}
+    <form action="/ilrj0i/pa3/pic" method="get">
+      <input type="hidden" name="op" value="nav">
+      <input type="hidden" name="picid" value="{{next[1]}}">
+      <input type="hidden" name="albumid" value="{{next[0]}}">
+      <input type="hidden" name="sequencenum" value="{{next[3]}}">
+      <input type="submit" value="Next">
+    </form>
+    {% endfor %}
+  </div>
+  {% endfor %}
 {% endblock %}
 
