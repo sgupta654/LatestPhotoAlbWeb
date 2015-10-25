@@ -901,6 +901,12 @@ def pic_caption_post():
     response.status_code = 201
     return response
 
+"""
+@app.route('/ilrj0i/pa3/pic/caption', method=['GET'])
+def pic_favorite_get():
+"""
+
+
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
