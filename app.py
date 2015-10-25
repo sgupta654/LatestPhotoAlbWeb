@@ -15,9 +15,13 @@ app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
 app.config['MYSQL_USER'] = 'root'
+<<<<<<< HEAD
 app.config['MYSQL_PASSWORD'] = 'Natal13!'
+=======
+app.config['MYSQL_PASSWORD'] = 'root'
+>>>>>>> fd9a70c700e7af16810e9bd6a31cbc67b7cbe311
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa3'
+app.config['MYSQL_DB'] = 'group36'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 #app.register_blueprint(contollers.album)
@@ -903,9 +907,8 @@ def pic_caption_post():
 	response.status_code = 201
 	return response
 
-@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
-def favorites(id):
-
+@app.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
+def favorites_get(id):
 	try:
 		picid = request.args.get('id')
 
@@ -950,9 +953,8 @@ def comment_to_jsonapi(comment):
 	rv["attributes"] = attributes
 	return rv
 
-@api.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
-def favorites(id):
-
+@app.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
+def favorites_post(id):
 	try:
 		favorite = request.args.get('id')
 	except RecordNotFound as e:
