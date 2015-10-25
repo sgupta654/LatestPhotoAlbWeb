@@ -15,9 +15,9 @@ app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36'
+app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 #app.register_blueprint(contollers.album)
@@ -878,7 +878,7 @@ def pic_caption_post():
 	if picid is None:
 		response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
 		response.status_code = 404
-		return 
+		return
 	if caption is None:
 		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
 		response.status_code = 404
@@ -898,12 +898,12 @@ def pic_caption_post():
 	response.status_code = 201
 	return response
 
-@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
+"""@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
 def favorites(id):
-	
+
 	try:
 		picid = request.args.get('id')
-		
+
 	except RecordNotFound as e:
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
@@ -946,7 +946,7 @@ def comment_to_jsonapi(comment):
 
 @api.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
 def favorites(id):
-	
+
 	try:
 		favorite = request.args.get('id')
 	except RecordNotFound as e:
@@ -981,7 +981,7 @@ def comment_to_jsonapi(comment):
 	attributes["date"] = attributes["date"].isoformat()
 	del attributes["commentid"]
 	rv["attributes"] = attributes
-	return rv
+	return rv """
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

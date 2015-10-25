@@ -27,15 +27,7 @@
   </div>
 
   {% if access == True %}
-    <b>Edit Caption:</b>
-    <br>
-    <textarea name="caption" form="captionform" rows="5" cols="50" wrap="virtual" placeholder="Enter new caption here..." maxlength="255"></textarea>
-    <br>
-    <form action="/ilrj0i/pa3/pic" id="captionform" method="POST">
-      <input type="hidden" name="albumid" value="{{album_info[0][0]}}">
-      <input type="hidden" name="picid" value="{{pic[1]}}">
-      <input type="submit" value="Update Caption">
-    </form>
+
   {% endif %}
 
   <div class="text-center">
