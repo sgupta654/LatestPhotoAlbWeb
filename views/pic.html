@@ -12,17 +12,15 @@
   <img src="/static/images/{{url[0][0]}}"/>
 
 
-    <!--<p>{{caption[0][0]}}</p>-->
     <div>
       <b>Caption: </b><input id="caption" />
     </div>
-    {{pic.1}}
-    {% block extrascripts %}
+    {{pic[1]}}
+
+      hello! {{pic[1]}} hello!
       <script type="text/javascript">
-        console.log("{{pic.1}}");
         initCaption("{{pic[1]}}");
       </script>
-    {% endblock %}
     <br>
   </div>
 
