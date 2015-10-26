@@ -3,7 +3,7 @@ function Caption(element, picid, caption) {
   this.element = element;
   this.picid = picid;
   element.value = caption; // objects in Javascript are assigned by reference, so this works
-  element.addEventListener("change", this, false); 
+  element.addEventListener("change", this, false); //post request on enter?
 }
 
 Caption.prototype.handleEvent = function(e) {
