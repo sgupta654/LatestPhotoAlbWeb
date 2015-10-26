@@ -882,7 +882,7 @@ def pic_caption_post():
 	if picid is None:
 		response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
 		response.status_code = 404
-		return 
+		return
 	if caption is None:
 		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
 		response.status_code = 404
@@ -900,13 +900,11 @@ def pic_caption_post():
 	response.status_code = 201
 	return response
 
-
 @app.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
 def favorites_get():
-	
 	try:
 		picid = request.args.get('id')
-		
+
 	except RecordNotFound as e:
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
@@ -925,7 +923,6 @@ def favorites_get():
 		}
 		return json.jsonify(data=data)
 	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite WHERE picid=''' + "'" + picid + "')"
-	print(query)
 	cursor.execute(query)
 	latest_favorite = cursor.fetchall()
 	print(latest_favorite)
