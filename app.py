@@ -15,9 +15,9 @@ app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'my_password'
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36pa3'
+app.config['MYSQL_DB'] = 'group36'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 #app.register_blueprint(contollers.album)
@@ -857,8 +857,6 @@ def pic_caption_get():
 	#results = cursor.execute(query)
 	cursor.execute(query)
 	results = cursor.fetchall()
-	print("HI")
-	print(results)
 	caption = None
 	if len(results) > 0:
 		caption = results[0][0]
@@ -866,7 +864,6 @@ def pic_caption_get():
 		response = json.jsonify(error='Could not retrieve caption. You did not provide a valid picture id.', status=422)
 		response.status_code = 422
 		return response
-	print(caption)
 	return json.jsonify(caption=caption)
 
 
@@ -885,7 +882,7 @@ def pic_caption_post():
 	if picid is None:
 		response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
 		response.status_code = 404
-		return 
+		return
 	if caption is None:
 		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
 		response.status_code = 404
@@ -903,18 +900,11 @@ def pic_caption_post():
 	response.status_code = 201
 	return response
 
-"""
-@app.route('/ilrj0i/pa3/pic/caption', method=['GET'])
-def pic_favorite_get():
-"""
-
-"""
-@api.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
-def favorites(id):
-	
+@app.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
+def favorites_get():
 	try:
 		picid = request.args.get('id')
-		
+
 	except RecordNotFound as e:
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
@@ -925,15 +915,24 @@ def favorites(id):
 	cursor.execute(query)
 	favorites = cursor.fetchall()
 	num_favorites = len(favorites)
-	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite)'''
+	if num_favorites == 0:
+		data = {
+		"id": picid,
+		"num_favorites": 0,
+		"latest_favorite": "none"
+		}
+		return json.jsonify(data=data)
+	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite WHERE picid=''' + "'" + picid + "')"
 	cursor.execute(query)
 	latest_favorite = cursor.fetchall()
+	print(latest_favorite)
 
 	data = {
 		"id": picid,
 		"num_favorites": num_favorites,
-		"lastest_favorite": latest_favorite
+		"latest_favorite": latest_favorite[0][0]
 	}
+	print(data['num_favorites'])
 	return json.jsonify(data=data)
 
 def malformed_request():
@@ -955,25 +954,54 @@ def comment_to_jsonapi(comment):
 	rv["attributes"] = attributes
 	return rv
 
-@api.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
-def favorites(id):
-	
+@app.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
+def favorites_post():
+	InvalidPicIDError = ''
 	try:
-		favorite = request.args.get('id')
+		req_json = request.get_json()
 	except RecordNotFound as e:
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
 		return response
 
-	data = {
-		"type": "favorites",
-		"id": id,
-		"attributes": {
-			"username": favorite.username,
-			"datetime": favorite.date.isoformat()
-		}
-	}
-	return json.jsonify(data=data)
+	cursor = mysql.connection.cursor()
+	picid = req_json.get('id')
+	favorite = req_json.get('favorite')
+
+	query = '''SELECT * FROM Favorite WHERE username=''' + "'" + favorite + "'"
+	cursor.execute(query)
+	favorited_users = cursor.fetchall()
+	if len(favorited_users) > 0:
+		response = json.jsonify(error='The user has already favorited this photo.', status=403) 
+		response.status_code = 403
+		return response
+	if picid is None and favorite is None:
+		response.json.jsonify(error='Could not update favorite. You did not provide a valid picture id or favorite.', status=404)
+		response.status_code = 404
+		return response
+	if picid is None:
+		response = json.jsonify(error='Could not update favorite. You did not provide a valid picture id.', status=404)
+		response.status_code = 404
+		return 
+	if favorite is None:
+		response = json.jsonify(error='Could not update favorite. You did not provide a valid favorite.', status=404)
+		response.status_code = 404
+		return response
+
+	try:
+		query = '''INSERT INTO Favorite (picid, username) VALUES (''' + "'" + picid + "', '" + favorite + "')"
+		cursor.execute(query)
+		mysql.connection.commit()
+
+	except InvalidPicIDError as e:
+		response = json.jsonify(error='Could not update favorite. The picture id was not valid.', status=422)
+		response.status_code = 422
+		return response
+
+	response = json.jsonify(id=picid, status=201)
+	response.status_code = 201
+	#return json.jsonify(data=data)
+	return response
 
 def malformed_request():
 	error = {
@@ -992,7 +1020,7 @@ def comment_to_jsonapi(comment):
 	attributes["date"] = attributes["date"].isoformat()
 	del attributes["commentid"]
 	rv["attributes"] = attributes
-	return rv"""
+	return rv
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

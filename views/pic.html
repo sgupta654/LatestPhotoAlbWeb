@@ -10,29 +10,32 @@
 	{% for pic in pic %}
 
   <img src="/static/images/{{url[0][0]}}"/>
-
+  <!-- if username -->
+  <div id="favorite_button">Click to favorite!</div>
+  <script>
+    //document.getElementById("favorite_button").addEventListener("click", initFavorite("{{pic[1]}}"));
+  </script>
 
     {% if access == True %}
     <div>
-      <b>Favorites: </b><div id="favorite" />
-      <b>Last Favorite by: </b><div id="latestfave" />
+      <b>Favorites: </b><input id="numfavorites" />
+      <b>Last Favorite by: </b><input id="latestfavorite" />
+      <br>
       <b>Caption: </b><input id="caption" />
     </div>
+    {{username}}
       <script type="text/javascript">
-        initCaption("{{pic[1]}}");
+        initFavorite("{{pic[1]}}");
+        initCaption("{{pic[1]}}", "{{username}}");
       </script>
     <br>
     {% else %}
     <div>
       <b> Caption: </b>{{pic[2]}}
-    </dvi>
+    </div>
     {% endif %}
 
   </div>
-
-
-  {% if access == True %}
-  {% endif %}
 
   <div class="text-center">
     {% for previous in previous %}
