@@ -15,9 +15,9 @@ app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_DB'] = 'group36'
+app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mysql.init_app(app)
 #app.register_blueprint(contollers.album)
@@ -972,7 +972,7 @@ def favorites_post():
 	cursor.execute(query)
 	favorited_users = cursor.fetchall()
 	if len(favorited_users) > 0:
-		response = json.jsonify(error='The user has already favorited this photo.', status=403) 
+		response = json.jsonify(error='The user has already favorited this photo.', status=403)
 		response.status_code = 403
 		return response
 	if picid is None and favorite is None:
@@ -982,7 +982,7 @@ def favorites_post():
 	if picid is None:
 		response = json.jsonify(error='Could not update favorite. You did not provide a valid picture id.', status=404)
 		response.status_code = 404
-		return 
+		return
 	if favorite is None:
 		response = json.jsonify(error='Could not update favorite. You did not provide a valid favorite.', status=404)
 		response.status_code = 404
@@ -1001,6 +1001,60 @@ def favorites_post():
 	response = json.jsonify(id=picid, status=201)
 	response.status_code = 201
 	#return json.jsonify(data=data)
+	return response
+
+@app.route('/ilrj0i/pa3/live')
+def live_route():
+	return send_file('../views/live.html')
+
+@app.route('/ilrj0i/pa3/pic/favorites/<int:id>')
+def favorites(id):
+
+    try:
+        favorite = get_favorite_by_id(id)
+    except RecordNotFound as e:
+        response = json.jsonify(errors=[e.to_json()])
+        response.status_code = 404
+        return response
+
+    data = {
+        "type": "favorites",
+        "id": id,
+        "attributes": {
+            "username": favorite.username,
+            "datetime": favorite.date.isoformat()
+        }
+    }
+    return json.jsonify(data=data)
+
+@app.route('/ilrj0i/pa3/pic/comments/<int:commentid>', methods=['GET'])
+def get_comment(commentid):
+	try:
+		comment = get_comment_by_id(commentid)
+		comment = comment_to_jsonapi(comment)
+	except RecordNotFound as e:
+		response = json.jsonify(errors=[e.to_json()])
+		response.status_code = e.status_code
+		return response
+
+	return json.jsonify(data=comment)
+
+@app.route('/ilrj0i/pa3/pic/comments', methods=['POST'])
+def post_comment():
+	try:
+		data = request.get_json(force=True)["data"]
+		picid = data["relationships"]["pic"]["data"]["id"]
+		username = data["attributes"]["username"]
+		message = data["attributes"]["message"]
+		date = data["attributes"]["message"]
+		commentid = insert_comment(picid, message, username)
+		data["id"] = commentid
+	except JSONAPIException as e:
+		response = json.jsonify(errors=[e.to_json()])
+		response.status_code = 422
+
+	response = json.jsonify(data=data)
+	response.status_code = 201
 	return response
 
 def malformed_request():
