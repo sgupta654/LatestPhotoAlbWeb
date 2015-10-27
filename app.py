@@ -1004,9 +1004,9 @@ def favorites_post():
 	#return json.jsonify(data=data)
 	return response
 
-@app.route('/ilrj0i/pa3/live')
+@app.route('/ilrj0i/pa3/pic/live')
 def live_route():
-	return send_file('../views/live.html')
+	return send_file('views/live.html')
 
 @app.route('/ilrj0i/pa3/pic/favorites/<int:id>')
 def favorites(id):
@@ -1077,10 +1077,6 @@ def comment_to_jsonapi(comment):
 	rv["attributes"] = attributes
 	return rv
 
-@app.route('/ilrj0i/pa3/pic/live')
-def live_route():
-	print("HEY")
-	return send_file('views/live.html')
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
