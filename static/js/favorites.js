@@ -1,14 +1,19 @@
 // Favorite.js
-function Favorite(element, picid, favorite) { //favorite = username favorited
+function Favorite(element, picid, username) { //favorite = username favorited
+  console.log("Favorite:" + username);
   this.element = element;
   this.picid = picid;
-  element.value = favorite; // objects in Javascript are assigned by reference, so this works
-  element.addEventListener("change", this, false); //post request on enter?
+  this.username = username;
+  //element.username = username; // objects in Javascript are assigned by reference, so this works
+  console.log("Favorite:" + this.username);
+  var favorite_button = document.getElementById("favorite_button");
+  favorite_button.addEventListener("click", this, false); //post request on enter?
 }
 
 Favorite.prototype.handleEvent = function(e) {
-  if (e.type === "change") {
-    this.update(this.element.value);
+  if (e.type === "click") {
+    console.log("HandleEvent:" + this.username);
+    this.update(this.username);
   }
 }
 
@@ -17,8 +22,9 @@ Favorite.prototype.change = function(value) {
   this.element.value = value;
 }
 
-Favorite.prototype.update = function(favorite) {
-  makeFavoritePostRequest(this.picid, favorite, function() {
+Favorite.prototype.update = function(username) {
+  console.log("UPDATE: " + username);
+  makeFavoritePostRequest(this.picid, username, function() {
     console.log('POST successful.');
   });
 }
@@ -30,10 +36,10 @@ function makeFavoriteRequest(picid, cb) {
     });
 }
 
-function makeFavoritePostRequest(picid, favorite, cb) {
+function makeFavoritePostRequest(picid, username, cb) {
   var data = {
     'id': picid,
-    'username': favorite
+    'username': username
   };
 
   qwest.post('/ilrj0i/pa3/pic/favorites', data, {
@@ -45,12 +51,12 @@ function makeFavoritePostRequest(picid, favorite, cb) {
 }
 
 function initFavorite(picid, username) {
-  console.log(username);
+  //console.log(username);
   var favorite = document.getElementById("numfavorites");
-  var favoriteBinding = new Favorite(favorite, picid);
+  var favoriteBinding = new Favorite(favorite, picid, username);
   var secondfavorite = document.getElementById("latestfavorite");
-  var secondfavoriteBinding = new Favorite(secondfavorite, picid);
-
+  var secondfavoriteBinding = new Favorite(secondfavorite, picid, username);
+  //console.log(username);
   makeFavoriteRequest(picid, function(resp) {
     //console.log(resp['data']);
     favoriteBinding.change(resp['data']['num_favorites']);
@@ -58,8 +64,8 @@ function initFavorite(picid, username) {
   });
 
   setInterval(function() {
-    makeFavoriteRequest(picid, function(resp) {
-      console.log(resp['data']);
+   makeFavoriteRequest(picid, function(resp) {
+      //console.log(resp['data']);
       favoriteBinding.change(resp['data']['num_favorites']);
       secondfavoriteBinding.change(resp['data']['latest_favorite']);
     });
