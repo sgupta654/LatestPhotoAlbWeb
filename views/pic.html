@@ -11,12 +11,12 @@
 
   <img src="/static/images/{{url[0][0]}}"/>
   <!-- if username -->
-  <div id="favorite_button">Click to favorite!</div>
+  <br>
+  <button type="button" class="btn btn-default" id="favorite_button"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> Like</button>
   <script>
     //document.getElementById("favorite_button").addEventListener("click", initFavorite("{{pic[1]}}"));
   </script>
 
-    {% if access == True %}
     <div>
       <b>Favorites: </b><input id="numfavorites" />
       <b>Last Favorite by: </b><input id="latestfavorite" />
@@ -25,15 +25,13 @@
     </div>
     {{username}}
       <script type="text/javascript">
-        initFavorite("{{pic[1]}}");
-        initCaption("{{pic[1]}}", "{{username}}");
+        initFavorite("{{pic[1]}}", "{{username}}");
+        initCaption("{{pic[1]}}");
       </script>
     <br>
-    {% else %}
     <div>
       <b> Caption: </b>{{pic[2]}}
     </div>
-    {% endif %}
 
   </div>
 
@@ -44,7 +42,7 @@
       <input type="hidden" name="picid" value="{{previous[1]}}">
       <input type="hidden" name="albumid" value="{{previous[0]}}">
       <input type="hidden" name="sequencenum" value="{{previous[3]}}">
-      <input type="submit" value="Previous">
+      <input type="submit" value="< Previous">
     </form>
     {% endfor %}
     {% for next in next %}
@@ -53,7 +51,7 @@
       <input type="hidden" name="picid" value="{{next[1]}}">
       <input type="hidden" name="albumid" value="{{next[0]}}">
       <input type="hidden" name="sequencenum" value="{{next[3]}}">
-      <input type="submit" value="Next">
+      <input type="submit" value="Next >">
     </form>
     {% endfor %}
   </div>

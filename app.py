@@ -966,30 +966,31 @@ def favorites_post():
 
 	cursor = mysql.connection.cursor()
 	picid = req_json.get('id')
-	favorite = req_json.get('favorite')
+	username = req_json.get('username')
 
-	query = '''SELECT * FROM Favorite WHERE username=''' + "'" + favorite + "'"
+	query = '''SELECT * FROM Favorite WHERE username=''' + "'" + username + "' AND picid=" + "'" + picid + "'"
+	print(query)
 	cursor.execute(query)
 	favorited_users = cursor.fetchall()
 	if len(favorited_users) > 0:
 		response = json.jsonify(error='The user has already favorited this photo.', status=403) 
 		response.status_code = 403
 		return response
-	if picid is None and favorite is None:
-		response.json.jsonify(error='Could not update favorite. You did not provide a valid picture id or favorite.', status=404)
+	if picid is None and username is None:
+		response.json.jsonify(error='Could not update favorite. You did not provide a valid picture id or username.', status=404)
 		response.status_code = 404
 		return response
 	if picid is None:
 		response = json.jsonify(error='Could not update favorite. You did not provide a valid picture id.', status=404)
 		response.status_code = 404
 		return 
-	if favorite is None:
-		response = json.jsonify(error='Could not update favorite. You did not provide a valid favorite.', status=404)
+	if username is None:
+		response = json.jsonify(error='Could not update favorite. You did not provide a valid username.', status=404)
 		response.status_code = 404
 		return response
 
 	try:
-		query = '''INSERT INTO Favorite (picid, username) VALUES (''' + "'" + picid + "', '" + favorite + "')"
+		query = '''INSERT INTO Favorite (picid, username) VALUES (''' + "'" + picid + "', '" + username + "')"
 		cursor.execute(query)
 		mysql.connection.commit()
 
