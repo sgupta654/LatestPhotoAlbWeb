@@ -27,7 +27,7 @@ App.ApplicationAdapter = DS.JSONAPIAdapter.extend({
 App.Router.map(function() {
   this.route('pic', { path: '/pic/:pic_id' });
   this.route('favorite', { path: '/favorite/:favorite_id' });
-  this.route('comment', { path: '/favorite/:comment_id' }); 
+  this.route('comment', { path: '/favorite/:comment_id' });
   this.route('user', { path: '/user/:username'}) ;
 });
 
@@ -139,6 +139,7 @@ App.PicController = Ember.Controller.extend({
     }
   }
 });
+
 App.Comment = DS.Model.extend({
   pic: DS.belongsTo('pic'),
   message: DS.attr('string'),
