@@ -40,22 +40,22 @@ mysql.init_app(app)
   pwdhash = db.Column(db.String(54))
 
   def __init__(self, firstname, lastname, email, password):
-    self.firstname = firstname.title()
-    self.lastname = lastname.title()
-    self.email = email.lower()
-    self.set_password(password)
+	self.firstname = firstname.title()
+	self.lastname = lastname.title()
+	self.email = email.lower()
+	self.set_password(password)
 
   def set_password(self, password):
-    self.pwdhash = generate_password_hash(password)
+	self.pwdhash = generate_password_hash(password)
 
   def check_password(self, password):
-    return check_password_hash(self.pwdhash, password)"""
+	return check_password_hash(self.pwdhash, password)"""
 
 # CREATING AN INSTANCE OF THE User CLASS
 
 """newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
-      db.session.add(newuser)
-      db.session.commit()"""
+	  db.session.add(newuser)
+	  db.session.commit()"""
 
 
 
@@ -983,7 +983,7 @@ def favorites_post():
 	if picid is None:
 		response = json.jsonify(error='Could not update favorite. You did not provide a valid picture id.', status=404)
 		response.status_code = 404
-		return 
+		return response
 	if username is None:
 		response = json.jsonify(error='Could not update favorite. You did not provide a valid username.', status=404)
 		response.status_code = 404
@@ -1022,6 +1022,11 @@ def comment_to_jsonapi(comment):
 	del attributes["commentid"]
 	rv["attributes"] = attributes
 	return rv
+
+@app.route('/ilrj0i/pa3/pic/live')
+def live_route():
+	print("HEY")
+	return send_file('views/live.html')
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

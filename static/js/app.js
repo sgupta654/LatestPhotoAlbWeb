@@ -15,13 +15,13 @@ Ember.Application.initializer({
 });
 
 App.Router = Ember.Router.extend({
-  rootURL: '/secretkey/pa3/live'
+  rootURL: '/ilrj0i/pa3/live'
 });
 
 App.Store = DS.Store.extend({});
 
 App.ApplicationAdapter = DS.JSONAPIAdapter.extend({
-  namespace: '/secretkey/pa3/api/v1'
+  namespace: '/ilrj0i/pa3/api/v1'
 })
 
 App.Router.map(function() {
@@ -108,5 +108,46 @@ App.UsernameInputComponent = Ember.Component.extend({
     });
     var parent = this.get('parentView');
     parent.set('username', username);
+  }
+});
+
+App.PicController = Ember.Controller.extend({
+
+  actions: {
+    commentSubmit: function(username, message) {
+      this.get('usernameValidator').validateUsername(username)
+      .then(function(username) {
+        $('#usernameInputError #error').remove();
+        var comment = this.store.createRecord('comment', {
+          message: message,
+          username: username,
+          date: moment().format("YYYY-MM-DDTHH:mm:ss"),
+        });
+        var picid = this.get('model').get('id');
+        var pic = this.store.findRecord('pic', picid)
+          .then(function (pic) {
+            var picurl = pic.get('picurl');
+            comment.set('pic', pic);
+            comment.save();
+          });
+      })
+      .catch(function(error) {
+        console.log(error);
+        $('#usernameInputError').append('<div id="error">Your comment cannot be submitted as you did not provide a valid username.</div>');
+        return;
+      });
+    }
+  }
+});
+App.Comment = DS.Model.extend({
+  pic: DS.belongsTo('pic'),
+  message: DS.attr('string'),
+  username: DS.attr('string'),
+  date: DS.attr()
+});
+
+App.CommentRoute = Ember.Route.extend({
+  model: function() {
+    return this.store.findRecord();
   }
 });
