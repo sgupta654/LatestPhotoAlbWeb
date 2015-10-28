@@ -40,22 +40,22 @@ mysql.init_app(app)
   pwdhash = db.Column(db.String(54))
 
   def __init__(self, firstname, lastname, email, password):
-    self.firstname = firstname.title()
-    self.lastname = lastname.title()
-    self.email = email.lower()
-    self.set_password(password)
+	self.firstname = firstname.title()
+	self.lastname = lastname.title()
+	self.email = email.lower()
+	self.set_password(password)
 
   def set_password(self, password):
-    self.pwdhash = generate_password_hash(password)
+	self.pwdhash = generate_password_hash(password)
 
   def check_password(self, password):
-    return check_password_hash(self.pwdhash, password)"""
+	return check_password_hash(self.pwdhash, password)"""
 
 # CREATING AN INSTANCE OF THE User CLASS
 
 """newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
-      db.session.add(newuser)
-      db.session.commit()"""
+	  db.session.add(newuser)
+	  db.session.commit()"""
 
 
 
@@ -1004,9 +1004,9 @@ def favorites_post():
 	#return json.jsonify(data=data)
 	return response
 
-@app.route('/ilrj0i/pa3/live')
+@app.route('/ilrj0i/pa3/pic/live')
 def live_route():
-	return send_file('../views/live.html')
+	return send_file('views/live.html')
 
 @app.route('/ilrj0i/pa3/pic/favorites/<int:id>')
 def favorites(id):
@@ -1076,6 +1076,7 @@ def comment_to_jsonapi(comment):
 	del attributes["commentid"]
 	rv["attributes"] = attributes
 	return rv
+
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
