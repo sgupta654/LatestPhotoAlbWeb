@@ -876,7 +876,7 @@ def pic_caption_post():
 	picid = req_json.get('id')
 	caption = req_json.get('caption')
 	if picid is None and caption is None:
-		response.json.jsonify(error='You did not provide an id and caption parameter.', status=404)
+		response.json.jsonify(status=404, error='You did not provide an id and caption parameter.' )
 		response.status_code = 404
 		return response
 	if picid is None:
