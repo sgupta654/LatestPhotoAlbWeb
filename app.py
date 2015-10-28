@@ -887,6 +887,16 @@ def pic_caption_post():
 		response = json.jsonify(error='You did not provide a caption parameter.', status=404)
 		response.status_code = 404
 		return response
+
+	query = "SELECT picid WHERE picid='%s';" % (picid)
+	cursor.execute(query)
+	validPicid = cursor.fetchall()
+
+	if len(validPicid) < 0:
+		response = json.jsonify(error='Invalid id. The picid does not exist.', status=404)
+		response.status_code = 422
+		return response
+
 	try:
 		query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
 		cursor.execute(query)
