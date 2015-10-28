@@ -847,10 +847,7 @@ def pic_caption_get():
 		picid = request.args.get('id')
 		print(picid)
 	except InvalidPicIDError as err:
-		r = {'error': 'You did not provide an id parameter.', 'status': 404}
-		ast.literal_eval(json.dumps(r))
-		response = json.jsonify(r)
-		#response = json.jsonify(error='You did not provide an id parameter.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return response
 	print(picid)
@@ -960,6 +957,7 @@ def comment_to_jsonapi(comment):
 @app.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
 def favorites_post():
 	InvalidPicIDError = ''
+	InvalidUsernameError = ''
 	try:
 		req_json = request.get_json()
 	except RecordNotFound as e:
@@ -980,15 +978,15 @@ def favorites_post():
 		response.status_code = 403
 		return response
 	if picid is None and username is None:
-		response.json.jsonify(error='Could not update favorite. You did not provide a valid picture id or username.', status=404)
+		response.json.jsonify(error='You did not provide an id and username parameter.', status=404)
 		response.status_code = 404
 		return response
 	if picid is None:
-		response = json.jsonify(error='Could not update favorite. You did not provide a valid picture id.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return response
 	if username is None:
-		response = json.jsonify(error='Could not update favorite. You did not provide a valid username.', status=404)
+		response = json.jsonify(error='You did not provide a username parameter.', status=404)
 		response.status_code = 404
 		return response
 
@@ -998,7 +996,12 @@ def favorites_post():
 		mysql.connection.commit()
 
 	except InvalidPicIDError as e:
-		response = json.jsonify(error='Could not update favorite. The picture id was not valid.', status=422)
+		response = json.jsonify(error='Invalid id. The picid does not exist.', status=422)
+		response.status_code = 422
+		return response
+
+	except InvalidUsernameError as e:
+		response = json.jsonify(error= 'Invalid username. The username does not exist.', status=422)
 		response.status_code = 422
 		return response
 
