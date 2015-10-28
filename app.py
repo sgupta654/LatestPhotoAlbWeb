@@ -14,8 +14,8 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Natal13!'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -847,7 +847,7 @@ def pic_caption_get():
 		picid = request.args.get('id')
 		print(picid)
 	except InvalidPicIDError as err:
-		response = json.jsonify(error='Could not retrieve caption. You did not provide a picture id.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return response
 	print(picid)
@@ -861,7 +861,7 @@ def pic_caption_get():
 	if len(results) > 0:
 		caption = results[0][0]
 	else:
-		response = json.jsonify(error='Could not retrieve caption. You did not provide a valid picture id.', status=422)
+		response = json.jsonify(error='Invalid id parameter. The picid does not exist.', status=422)
 		response.status_code = 422
 		return response
 	return json.jsonify(caption=caption)
@@ -876,15 +876,15 @@ def pic_caption_post():
 	picid = req_json.get('id')
 	caption = req_json.get('caption')
 	if picid is None and caption is None:
-		response.json.jsonify(error='Could not update caption. You did not provide a valid picture id or caption.', status=404)
+		response.json.jsonify(error='You did not provide an id and caption parameter.', status=404)
 		response.status_code = 404
 		return response
 	if picid is None:
-		response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return
 	if caption is None:
-		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
+		response = json.jsonify(error='You did not provide a caption parameter.', status=404)
 		response.status_code = 404
 		return response
 	try:
@@ -893,7 +893,7 @@ def pic_caption_post():
 		mysql.connection.commit()
 		#commit?
 	except InvalidPicIDError as e:
-		response = json.jsonify(error='Could not update caption. The picture id was not valid.', status=422)
+		response = json.jsonify(error='Invalid id. The picid does not exist.', status=422)
 		response.status_code = 422
 		return response
 	response = json.jsonify(id=picid, status=201)
