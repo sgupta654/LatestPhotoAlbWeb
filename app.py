@@ -847,7 +847,10 @@ def pic_caption_get():
 		picid = request.args.get('id')
 		print(picid)
 	except InvalidPicIDError as err:
-		response = json.jsonify(error='You did not provide an id parameter.', status=404)
+		r = {'error': 'You did not provide an id parameter.', 'status': 404}
+		ast.literal_eval(json.dumps(r))
+		response = json.jsonify(r)
+		#response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return response
 	print(picid)
