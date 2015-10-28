@@ -920,7 +920,7 @@ def pic_caption_post():
 def favorites_get():
 	try:
 		picid = request.args.get('id')
-
+#Figure out the proper way to catch this error
 	except RecordNotFound as e:
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
@@ -942,7 +942,7 @@ def favorites_get():
 	cursor.execute(query)
 	latest_favorite = cursor.fetchall()
 	#print(latest_favorite)
-
+#this seems correct, but failing test case
 	data = {
 		"id": picid,
 		"num_favorites": num_favorites,
