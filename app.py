@@ -892,7 +892,7 @@ def pic_caption_post():
 	cursor.execute(query)
 	validPicid = cursor.fetchall()
 
-	if len(validPicid) < 0:
+	if validPicid[0] == NULL:
 		response = json.jsonify(error='Invalid id. The picid does not exist.', status=404)
 		response.status_code = 422
 		return response
