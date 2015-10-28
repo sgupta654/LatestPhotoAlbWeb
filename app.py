@@ -888,14 +888,15 @@ def pic_caption_post():
 		response.status_code = 404
 		return response
 
-	query = "SELECT picid WHERE picid='%s';" % (picid)
+	#need to test to make sure that picid exists in db
+	"""query = "SELECT picid WHERE picid='%s';" % (picid)
 	cursor.execute(query)
 	validPicid = cursor.fetchall()
 
 	if validPicid[0] == NULL:
 		response = json.jsonify(error='Invalid id. The picid does not exist.', status=404)
 		response.status_code = 422
-		return response
+		return response"""
 
 	try:
 		query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
@@ -935,14 +936,14 @@ def favorites_get():
 	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite WHERE picid=''' + "'" + picid + "')"
 	cursor.execute(query)
 	latest_favorite = cursor.fetchall()
-	print(latest_favorite)
+	#print(latest_favorite)
 
 	data = {
 		"id": picid,
 		"num_favorites": num_favorites,
 		"latest_favorite": latest_favorite[0][0]
 	}
-	print(data['num_favorites'])
+	#print(data['num_favorites'])
 	return json.jsonify(data=data)
 
 def malformed_request():
