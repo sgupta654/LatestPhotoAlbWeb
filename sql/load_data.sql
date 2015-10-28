@@ -99,7 +99,7 @@ INSERT INTO Comment (picid, message, username, date) VALUES ('football_s3','I\'d
 
 INSERT INTO Favorite (picid, username, date) VALUES ('football_s3','spacejunkie','2015-10-05 22:23:23');
 INSERT INTO Favorite (picid, username, date) VALUES ('football_s3','sportslover','2015-10-05 21:23:23');
-INSERT INTO Favorite (picid, username, date) VALUES ('football_s2','spacejunkie','2015-10-05 23:23:35');
+INSERT INTO Favorite (picid, username, date) VALUES ('football_s2','spacejunkie','2015-10-05 23:47:35');
 INSERT INTO Favorite (picid, username, date) VALUES ('football_s2','sportslover','2015-10-05 23:45:35');
 INSERT INTO Favorite (picid, username, date) VALUES ('football_s2','traveler','2015-10-05 21:10:35');
 INSERT INTO Favorite (picid, username, date) VALUES ('football_s1','traveler','2015-10-05 23:10:35');
