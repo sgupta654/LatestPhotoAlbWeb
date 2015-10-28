@@ -14,8 +14,13 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
+<<<<<<< HEAD
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'my_password'
+=======
+app.config['MYSQL_USER'] = 'group36'
+app.config['MYSQL_PASSWORD'] = 'GOOCH'
+>>>>>>> 63d63ce6dffaadfb84dc79b0129a971fbf3015d5
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -40,22 +45,22 @@ mysql.init_app(app)
   pwdhash = db.Column(db.String(54))
 
   def __init__(self, firstname, lastname, email, password):
-    self.firstname = firstname.title()
-    self.lastname = lastname.title()
-    self.email = email.lower()
-    self.set_password(password)
+	self.firstname = firstname.title()
+	self.lastname = lastname.title()
+	self.email = email.lower()
+	self.set_password(password)
 
   def set_password(self, password):
-    self.pwdhash = generate_password_hash(password)
+	self.pwdhash = generate_password_hash(password)
 
   def check_password(self, password):
-    return check_password_hash(self.pwdhash, password)"""
+	return check_password_hash(self.pwdhash, password)"""
 
 # CREATING AN INSTANCE OF THE User CLASS
 
 """newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
-      db.session.add(newuser)
-      db.session.commit()"""
+	  db.session.add(newuser)
+	  db.session.commit()"""
 
 
 
@@ -847,7 +852,7 @@ def pic_caption_get():
 		picid = request.args.get('id')
 		print(picid)
 	except InvalidPicIDError as err:
-		response = json.jsonify(error='Could not retrieve caption. You did not provide a picture id.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return response
 	print(picid)
@@ -861,7 +866,7 @@ def pic_caption_get():
 	if len(results) > 0:
 		caption = results[0][0]
 	else:
-		response = json.jsonify(error='Could not retrieve caption. You did not provide a valid picture id.', status=422)
+		response = json.jsonify(error='Invalid id parameter. The picid does not exist.', status=422)
 		response.status_code = 422
 		return response
 	return json.jsonify(caption=caption)
@@ -876,27 +881,38 @@ def pic_caption_post():
 	picid = req_json.get('id')
 	caption = req_json.get('caption')
 	if picid is None and caption is None:
-		response.json.jsonify(error='Could not update caption. You did not provide a valid picture id or caption.', status=404)
+		response.json.jsonify(error='You did not provide an id and caption parameter.', status=404)
 		response.status_code = 404
 		return response
 	if picid is None:
-		response = json.jsonify(error='Could not update caption. You did not provide a valid picture id.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
 		return
 	if caption is None:
-		response = json.jsonify(error='Could not update caption. You did not provide a valid caption.', status=404)
+		response = json.jsonify(error='You did not provide a caption parameter.', status=404)
 		response.status_code = 404
 		return response
+
+	#need to test to make sure that picid exists in db
+	"""query = "SELECT picid WHERE picid='%s';" % (picid)
+	cursor.execute(query)
+	validPicid = cursor.fetchall()
+
+	if validPicid[0] == NULL:
+		response = json.jsonify(error='Invalid id. The picid does not exist.', status=404)
+		response.status_code = 422
+		return response"""
+
 	try:
 		query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
 		cursor.execute(query)
 		mysql.connection.commit()
 		#commit?
 	except InvalidPicIDError as e:
-		response = json.jsonify(error='Could not update caption. The picture id was not valid.', status=422)
+		response = json.jsonify(error='Invalid id. The picid does not exist.', status=422)
 		response.status_code = 422
 		return response
-	response = json.jsonify(id=picid, status=201)
+	response = json.jsonify(caption=caption, status=201)
 	response.status_code = 201
 	return response
 
@@ -925,14 +941,14 @@ def favorites_get():
 	query = '''SELECT username FROM Favorite WHERE date IN (SELECT max(date) FROM Favorite WHERE picid=''' + "'" + picid + "')"
 	cursor.execute(query)
 	latest_favorite = cursor.fetchall()
-	print(latest_favorite)
+	#print(latest_favorite)
 
 	data = {
 		"id": picid,
 		"num_favorites": num_favorites,
 		"latest_favorite": latest_favorite[0][0]
 	}
-	print(data['num_favorites'])
+	#print(data['num_favorites'])
 	return json.jsonify(data=data)
 
 def malformed_request():
@@ -957,6 +973,7 @@ def comment_to_jsonapi(comment):
 @app.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
 def favorites_post():
 	InvalidPicIDError = ''
+	InvalidUsernameError = ''
 	try:
 		req_json = request.get_json()
 	except RecordNotFound as e:
@@ -973,19 +990,19 @@ def favorites_post():
 	cursor.execute(query)
 	favorited_users = cursor.fetchall()
 	if len(favorited_users) > 0:
-		response = json.jsonify(error='The user has already favorited this photo.', status=403) 
+		response = json.jsonify(error='The user has already favorited this photo.', status=403)
 		response.status_code = 403
 		return response
 	if picid is None and username is None:
-		response.json.jsonify(error='Could not update favorite. You did not provide a valid picture id or username.', status=404)
+		response.json.jsonify(error='You did not provide an id and username parameter.', status=404)
 		response.status_code = 404
 		return response
 	if picid is None:
-		response = json.jsonify(error='Could not update favorite. You did not provide a valid picture id.', status=404)
+		response = json.jsonify(error='You did not provide an id parameter.', status=404)
 		response.status_code = 404
-		return 
+		return response
 	if username is None:
-		response = json.jsonify(error='Could not update favorite. You did not provide a valid username.', status=404)
+		response = json.jsonify(error='You did not provide a username parameter.', status=404)
 		response.status_code = 404
 		return response
 
@@ -995,13 +1012,72 @@ def favorites_post():
 		mysql.connection.commit()
 
 	except InvalidPicIDError as e:
-		response = json.jsonify(error='Could not update favorite. The picture id was not valid.', status=422)
+		response = json.jsonify(error='Invalid id. The picid does not exist.', status=422)
+		response.status_code = 422
+		return response
+
+	except InvalidUsernameError as e:
+		response = json.jsonify(error= 'Invalid username. The username does not exist.', status=422)
 		response.status_code = 422
 		return response
 
 	response = json.jsonify(id=picid, status=201)
 	response.status_code = 201
 	#return json.jsonify(data=data)
+	return response
+
+@app.route('/ilrj0i/pa3/pic/live')
+def live_route():
+	return send_file('views/live.html')
+
+@app.route('/ilrj0i/pa3/pic/favorites/<int:id>')
+def favorites(id):
+
+    try:
+        favorite = get_favorite_by_id(id)
+    except RecordNotFound as e:
+        response = json.jsonify(errors=[e.to_json()])
+        response.status_code = 404
+        return response
+
+    data = {
+        "type": "favorites",
+        "id": id,
+        "attributes": {
+            "username": favorite.username,
+            "datetime": favorite.date.isoformat()
+        }
+    }
+    return json.jsonify(data=data)
+
+@app.route('/ilrj0i/pa3/pic/comments/<int:commentid>', methods=['GET'])
+def get_comment(commentid):
+	try:
+		comment = get_comment_by_id(commentid)
+		comment = comment_to_jsonapi(comment)
+	except RecordNotFound as e:
+		response = json.jsonify(errors=[e.to_json()])
+		response.status_code = e.status_code
+		return response
+
+	return json.jsonify(data=comment)
+
+@app.route('/ilrj0i/pa3/pic/comments', methods=['POST'])
+def post_comment():
+	try:
+		data = request.get_json(force=True)["data"]
+		picid = data["relationships"]["pic"]["data"]["id"]
+		username = data["attributes"]["username"]
+		message = data["attributes"]["message"]
+		date = data["attributes"]["message"]
+		commentid = insert_comment(picid, message, username)
+		data["id"] = commentid
+	except JSONAPIException as e:
+		response = json.jsonify(errors=[e.to_json()])
+		response.status_code = 422
+
+	response = json.jsonify(data=data)
+	response.status_code = 201
 	return response
 
 def malformed_request():
@@ -1022,6 +1098,7 @@ def comment_to_jsonapi(comment):
 	del attributes["commentid"]
 	rv["attributes"] = attributes
 	return rv
+
 
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

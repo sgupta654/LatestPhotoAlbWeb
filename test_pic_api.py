@@ -3,8 +3,8 @@ Tests API routes for part 2a and 2b of EECS 485 Project 3
 Requires "requests" library installed (pip install requests)
 Expects database to be in default state (drop tables, then run tbl_create.sql, load_data.sql and pa3_sql.sql)
 Example usage:
-python test_pic_api.py hostname:port 
-python test_pic_api.py http://eecs485-03.eecs.umich.edu:5930/secretkey/pa3
+python test_pic_api.py hostname:port
+python test_pic_api.py http://eecs485-05.eecs.umich.edu:6036/ilrj0i/pa3
 OR
 python test_pic_api.py http://localhost:5930/secretkey/pa3
 '''
@@ -298,7 +298,7 @@ class TestPicFavoriteAPI(unittest.TestCase):
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
 		sys.exit('You must pass in the hostname:port/secretkey/pa3 as a command line argument. Example usage: python test_pic_api.py http://localhost:5930/secretkey/pa3')
-	
+
 	hostname = sys.argv[1]
 
 	# Test Caption routes
