@@ -5,8 +5,6 @@ Members:
 Details:
         All of the controllers are in a main run file, and not split up into individual controller files.
 
-        *** USED ONE LATE DAY ***
-
 Deploy:
         use the command:
                 python app.py
