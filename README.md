@@ -1,11 +1,3 @@
-# pa3_ilrj0i
-
-Group Name:
-        4Maize8Blue5
-
-Group Number: 
-		36
-
 Members:
         Andrew Chen (anchen):
         Brian Lim (blimmer):
