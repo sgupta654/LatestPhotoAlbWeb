@@ -14,13 +14,9 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'bmp', 'gif'])
 app = Flask(__name__, template_folder='views', static_folder='static')
 mysql = MySQL()
 
-<<<<<<< HEAD
+
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'my_password'
-=======
-app.config['MYSQL_USER'] = 'group36'
-app.config['MYSQL_PASSWORD'] = 'GOOCH'
->>>>>>> 63d63ce6dffaadfb84dc79b0129a971fbf3015d5
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_DB'] = 'group36pa3'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -43,16 +39,13 @@ mysql.init_app(app)
   lastname = db.Column(db.String(100))
   email = db.Column(db.String(120), unique=True)
   pwdhash = db.Column(db.String(54))
-
   def __init__(self, firstname, lastname, email, password):
 	self.firstname = firstname.title()
 	self.lastname = lastname.title()
 	self.email = email.lower()
 	self.set_password(password)
-
   def set_password(self, password):
 	self.pwdhash = generate_password_hash(password)
-
   def check_password(self, password):
 	return check_password_hash(self.pwdhash, password)"""
 
@@ -70,13 +63,11 @@ mysql.init_app(app)
 	cursor.execute(query)
 	dbpassword = cursor.fetchall()
 	return dbpassword[0][0] == password
-
 def authenticate():
 	return Response(
 		'Could not verify your access level for that URL.\n'
 		'You have to login with proper credentials', 401,
 		{'WWW-Authenticate': 'Basic realm="Login Required"'})
-
 def requires_auth(f):
 	@wraps(f)
 	def decorated(*args, **kwargs):
@@ -88,11 +79,8 @@ def requires_auth(f):
 			return authenticate()
 		return f(*args, **kwargs)
 	return decorated"""
-
-
 @app.route('/ilrj0i/pa3/', methods=['GET'])
 def main_route():
-
 	# The next line gets the global application object
 	#app = current_app._get_current_object()
 	# The following code gets the mysql object from app and creates a connection/cursor
@@ -104,12 +92,10 @@ def main_route():
 	#return render_template("index.html", users = users)
 	#"""
 	#import pdb; pdb.set_trace()
-
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Album WHERE access="public"'''
 	cursor.execute(query)
 	albums = cursor.fetchall()
-
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			session.pop('username', None)
@@ -134,10 +120,8 @@ def main_route():
 		####login yes = html will load the "logged in as" navbar
 		return render_template("index.html", albums = albums, username = username, login = "yes")
 	return render_template("index.html", albums = albums, login = "no")
-
 #if op==signin
 #OTHER AUTHENTICATION SHIT!!!
-
 @app.route('/ilrj0i/pa3/', methods=['POST'])
 def userloginpost():
 	#checks database for username
@@ -153,7 +137,6 @@ def userloginpost():
 		return render_template("login.html", username = "no", login = "no")
 	if dbpassword[0][0] != password:
 		return render_template("login.html", password = "no", login = "no")
-
 	session['username'] = username
 	session['lastactivity'] = datetime.now()
 	username = session['username']
@@ -170,7 +153,6 @@ def userloginpost():
 	albumsadd2 = cursor.fetchall()
 	albums = albums + tuple(set(albumsadd2)-set(albums))
 	return render_template("index.html", albums = albums, username = username, login = "yes")
-
 @app.route('/ilrj0i/pa3/user', methods=['GET'])
 def signup():
 	if 'username' in session:
@@ -188,7 +170,6 @@ def signup():
 		username = session['username']
 		return render_template("edituser.html", username = username, login = "yes")
 	return render_template("user.html", login = "no")
-
 @app.route('/ilrj0i/pa3/user', methods=['POST'])
 def createaccount():
 	###session?
@@ -198,10 +179,8 @@ def createaccount():
 	email = request.form['email']
 	password1 = request.form['password1']
 	password2 = request.form['password2']
-
 	if password1 != password2:
 		return render_template("user.html", passnotcorrect = "no", login = "no", username = username, firstname = firstname, lastname = lastname, email = email)
-
 	for x in password1:
 			x = chr((ord(x) + 7) % 3)
 	email = request.form['email']
@@ -221,8 +200,6 @@ def createaccount():
 	cursor.execute(query)
 	albums = cursor.fetchall()
 	return render_template("index.html", albums = albums, username = username, login = "yes")
-
-
 @app.route('/ilrj0i/pa3/user/edit', methods=['GET'])
 def edituserget():
 	if 'username' in session:
@@ -240,7 +217,6 @@ def edituserget():
 		username = session['username']
 		return render_template("edituser.html", username = username, login = "yes")
 	return render_template("login.html", login = "no")
-
 @app.route('/ilrj0i/pa3/user/edit', methods=['POST'])
 def edituserpost():
 	if 'username' in session:
@@ -262,10 +238,8 @@ def edituserpost():
 		email = request.form['email']
 		password1 = request.form['password1']
 		password2 = request.form['password2']
-
 		if password1 != password2:
 			return render_template("edituser.html", login = "yes", passnotcorrect = "no", firstname = firstname, lastname = lastname, email = email)
-
 		for x in password1:
 			x = chr((ord(x) + 7) % 3)
 		email = request.form['email']
@@ -275,13 +249,9 @@ def edituserpost():
 		mysql.connection.commit()
 		return render_template("index.html", username = username, login = "yes")
 	return render_template("login.html", login = "no")
-
 @app.route('/ilrj0i/pa3/user/login', methods=['GET'])
 def userloginget():
 	return render_template("login.html", login = "no")
-
-
-
 @app.route('/ilrj0i/pa3/user/delete', methods=['POST'])
 def deleteuser():
 	if 'username' in session:
@@ -307,8 +277,6 @@ def deleteuser():
 		albums = cursor.fetchall()
 		return render_template("index.html", albums = albums, login = "no")
 	return render_template("login.html", login = "no")
-
-
 @app.route('/ilrj0i/pa3/user/logout')
 def logout():
 	if 'username' in session:
@@ -326,8 +294,6 @@ def logout():
 		albums = cursor.fetchall()
 		return render_template("index.html", albums = albums, login = "no")
 	return render_template("login.html", login = "no")
-
-
 @app.route('/ilrj0i/pa3/albums')
 def albumsss():
 	if 'username' in session:
@@ -353,23 +319,18 @@ def albumsss():
 	cursor.execute(query)
 	albums = cursor.fetchall()
 	return render_template("albums.html", albums = albums, login = "no")
-
-
 @app.route('/ilrj0i/pa3/album')
 def albumfunc():
 	#import pdb; pdb.set_trace()
-
 	albumid = request.args.get('id')
 	cursor = mysql.connection.cursor()
 	#import pdb; pdb.set_trace()
 	access = False
-
 	query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	#query = '''SELECT Contain.*, Photo.url FROM table1 Contain, table2 Photo INNER JOIN Photo ON Contain.picid=Photo.picid WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	pics = cursor.fetchall()
-
 	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	album_info = cursor.fetchall()
@@ -379,7 +340,6 @@ def albumfunc():
 			session.pop('username', None)
 			session.pop('lastactivity', None)
 			cursor = mysql.connection.cursor()
-
 			return render_template("index.html", albums = albums, login = "no", timeout = "yes")
 		session['lastactivity'] = datetime.now()
 		username = session['username']
@@ -402,7 +362,6 @@ def albumfunc():
 	album_owner = cursor.fetchall()
 	username = ""
 	"""
-
 	"""
 	only accessible ones shown
 	query = '''SELECT * FROM Album WHERE access="public"'''
@@ -410,7 +369,6 @@ def albumfunc():
 	cursor.execute(query)
 	albums = cursor.fetchall()
 	"""
-
 """
 ONLY ACCESSIBLE ONES ARE DISPLAYED
 	query = '''SELECT albumid FROM Album WHERE albumid=''' + "'" + albumid + "' AND access='public'"
@@ -418,44 +376,33 @@ ONLY ACCESSIBLE ONES ARE DISPLAYED
 	public_albums = cursor.fetchall()
 	if len(public_albums) > 0:
 		return render_template("album.html", pics = pics, albumid = albumid, username = username, album_name = album_name, album_owner = album_owner, access = access, login = "no")
-
 	return render_template("login.html", albums = albums, login = "no")
 	"""
-
 	#return render_template("album.html", albumid = albumid, pics = pics, pics_in_album = pics_in_album)
-
 @app.route('/ilrj0i/pa3/pic', methods=['GET'])
 def pic():
 	cursor = mysql.connection.cursor()
 	requestpicid = request.args.get('picid')
 	albumid = request.args.get('albumid')
 	access = False
-
 	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	album_info = cursor.fetchall()
-
 	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "' AND albumid=" + "'" + albumid + "'"		##and albumid?
 	cursor.execute(query)
 	pic = cursor.fetchall()
-
 	query = '''SELECT url FROM Photo WHERE picid=''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	url = cursor.fetchall()
-
-
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + str(pic[0][3]) + ")"
 	cursor.execute(query)
 	previous = cursor.fetchall()
-
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' +  str(pic[0][3]) + ")"
 	cursor.execute(query)
 	next = cursor.fetchall()
-
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 	cursor.execute(query)
 	caption = cursor.fetchall()
-
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
@@ -467,20 +414,15 @@ def pic():
 			return render_template("index.html", albums = albums, login = "no", timeout = "yes")
 		session['lastactivity'] = datetime.now()
 		username = session['username']
-
 		#import pdb; pdb.set_trace()
-
 		"""
 		navigation = request.args.get('doit')
-
 		if navigation == "true":
 			previousreq = request.args.get('prev')
 			nextreq = request.args.get('nex')
-
 			cursor = mysql.connection.cursor()
 			seqnumquery = '''SELECT sequencenum FROM Contain INNER JOIN Photo ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumID + "'" + AND Photo.picid = ''' + "'"
 			sequencenumreturn = cursor.fetchall()
-
 			if previousreq == "-1":
 		"""
 		if username == album_info[0][4]:
@@ -502,34 +444,24 @@ def pic():
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_owner = cursor.fetchall()
-
 	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_name = cursor.fetchall()
-
 	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_views = cursor.fetchall()
 """
-
-
-
 """
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 	cursor.execute(query)
 	caption = cursor.fetchall()
 """
-
-
-
 """
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	picarr = cursor.fetchall()
 """
-
 	#return render_template("test.html", picarr = returnpic, albumid = albumID)
-
 @app.route('/ilrj0i/pa3/pic', methods=['POST'])
 def editpics():
 	#import pdb; pdb.set_trace()
@@ -537,24 +469,19 @@ def editpics():
 	requestpicid = request.form['picid']
 	albumid = request.form['albumid']
 	access = False
-
 	"""
 	query = '''SELECT username FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_owner = cursor.fetchall()
-
 	query = '''SELECT title FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_name = cursor.fetchall()
-
 	query = '''SELECT access FROM Album WHERE albumid=''' + "'"+albumid+"'"
 	cursor.execute(query)
 	album_views = cursor.fetchall()
-
 	query = '''SELECT * FROM Photo WHERE picid =''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	picarr = cursor.fetchall()
-
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 	cursor.execute(query)
 	caption = cursor.fetchall()
@@ -562,23 +489,18 @@ def editpics():
 	query = '''SELECT * FROM Album WHERE albumid=''' + "'" + albumid + "'"
 	cursor.execute(query)
 	album_info = cursor.fetchall()
-
 	query = '''SELECT * FROM Contain WHERE picid=''' + "'" + requestpicid + "' AND albumid=" + "'" + albumid + "'"		##and albumid?
 	cursor.execute(query)
 	pic = cursor.fetchall()
-
 	query = '''SELECT url FROM Photo WHERE picid=''' + "'" + requestpicid + "'"
 	cursor.execute(query)
 	url = cursor.fetchall()
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MAX(sequencenum) FROM Contain WHERE sequencenum < ''' + str(pic[0][3]) + ")"
 	cursor.execute(query)
 	previous = cursor.fetchall()
-
 	query = '''SELECT * FROM Contain WHERE albumid=''' + "'" + albumid + "'" + ''' AND sequencenum = (SELECT MIN(sequencenum) FROM Contain WHERE sequencenum > ''' +  str(pic[0][3]) + ")"
 	cursor.execute(query)
 	next = cursor.fetchall()
-
-
 	if 'username' in session:
 		if datetime.now() - session['lastactivity'] > timedelta(minutes=5):
 			####
@@ -591,7 +513,6 @@ def editpics():
 			return render_template("index.html", albums = albums, login = "no")
 		session['lastactivity'] = datetime.now()
 		username = session['username']
-
 		if username == album_info[0][4]:
 			access = True
 			caption_new = request.form['caption']
@@ -601,26 +522,19 @@ def editpics():
 			query = '''UPDATE Contain SET caption=''' + "'"+caption_new+"'" + "WHERE picid=" + "'"+requestpicid+"'"
 			cursor.execute(query)
 			mysql.connection.commit()
-
 			query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 			cursor.execute(query)
 			caption = cursor.fetchall()
-
 		return render_template("pic.html", pic = pic, url = url, username = username, album_info = album_info, caption = caption, previous = previous, next = next, access = access, login = "yes")
-
 	query = '''SELECT caption FROM Contain WHERE picid=''' + "'"+requestpicid+"'"
 	cursor.execute(query)
 	caption = cursor.fetchall()
-
 	return render_template("pic.html", pic = pic, url = url, album_info = album_info, caption = caption, previous = previous, next = next, access = access, login = "no")
 """
 	if album_views[0][0] != "public":
 		return render_template("login.html", login = "no")
 """
 	#return str(picarr)
-
-
-
 @app.route('/ilrj0i/pa3/albums/edit', methods=['POST'])
 def editalbums():
 	if 'username' in session:
@@ -653,7 +567,6 @@ def editalbums():
 			albums = cursor.fetchall()
 			return render_template("editalbums.html", albums = albums, username = username, login = "yes")
 			#return render_template("test.html", query = query)
-
 			######DELETE FROM OTHER TABLES
 		if (request.form['op'] == 'delete'):
 			albumid = request.form['albumid']
@@ -670,7 +583,6 @@ def editalbums():
 			albums = cursor.fetchall()
 			return render_template("editalbums.html", albums = albums, username = username, login = "yes")
 	return render_template("login.html", login = "no")
-
 @app.route('/ilrj0i/pa3/albums/edit', methods=['GET'])
 def vieweditalbums():
 	if 'username' in session:
@@ -692,19 +604,15 @@ def vieweditalbums():
 		albums = cursor.fetchall()
 		return render_template("editalbums.html", albums = albums, username = username, login = "yes")
 	return render_template("login.html", login = "no")
-
-
 ########################################
 #definition to check for allowed extension/filetype
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
 #definition for the pic hashing function
 def secure_filename(filename):
 	#import pdb; pdb.set_trace()
 	now = datetime.now()
 	return (filename.rsplit('.', 1)[0] + "_" + str(now.year) + str(now.month) + str(now.day) + "_" + str(now.hour) + str(now.minute) + str(now.second))
-
 @app.route('/ilrj0i/pa3/album/edit', methods=['POST'])
 def editalbum():
 	if 'username' in session:
@@ -723,37 +631,31 @@ def editalbum():
 		albumid = request.form['albumid']
 		private = "yes"
 		cursor = mysql.connection.cursor()
-
 		if (request.form['op'] == 'changename'):
 			name = request.form['newname']
 			query = '''UPDATE Album SET title=''' + "'" + name + "' WHERE albumid=" + "'" + albumid + "'"
 			cursor.execute(query)
 			mysql.connection.commit()
-
 		if (request.form['op'] == 'permissions'):
 			permissiontype = request.form['type']
 			query = '''UPDATE Album SET access=''' + "'" + permissiontype + "' WHERE albumid=" + "'" + albumid + "'"
 			cursor.execute(query)
 			mysql.connection.commit()
-
 		if (request.form['op'] == 'revokeaccess'):
 			username = request.form['username']#############
 			query = '''DELETE FROM AlbumAccess WHERE username=''' + "'" + username + "'"
 			cursor.execute(query)
 			mysql.connection.commit()
-
 		if (request.form['op'] == 'addaccess'):
 			username = request.form['username']################
 			query = '''INSERT INTO AlbumAccess (albumid, username) VALUES (''' + "'" + albumid + "','" + username + "')"
 			cursor.execute(query)
 			mysql.connection.commit()
-
 		if (request.form['op'] == 'delete'):
 			returnpicid = request.form['picid']
 			query = '''DELETE FROM Photo WHERE picid=''' + "'" + returnpicid + "'"#INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.picid=''' + "'" + picid + "'"#'''' AND Contain.albumid=''' + "'" + albumid + "'"
 			cursor.execute(query)
 			mysql.connection.commit()
-
 		if (request.form['op'] == 'add'):
 			file = request.files['file']
 			#print file.filename
@@ -784,7 +686,6 @@ def editalbum():
 				query = '''INSERT INTO Contain (albumid, picid, sequencenum) VALUES ('''+"'"+albumid+"', '"+picid+"', '"+sequencenum+"')"
 				cursor.execute(query)
 				mysql.connection.commit()
-
 		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		accessors = cursor.fetchall()
@@ -798,13 +699,9 @@ def editalbum():
 			private = "no"
 		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors, private = private, username = username, login = "yes")
 	return render_template("login.html", login = "no")
-
-
-
 		#return render_template("test.html", picid = picid, albumid = albumid, pics = pics)
 	#if request.form['op'] == 'add':
 		################
-
 @app.route('/ilrj0i/pa3/album/edit', methods=['GET'])
 def viewalbum():
 	if 'username' in session:
@@ -823,30 +720,23 @@ def viewalbum():
 		albumid = request.args.get('id')
 		private = "yes"
 		cursor = mysql.connection.cursor()
-
 		#access stuff
 		query = '''SELECT username FROM AlbumAccess WHERE albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		accessors = cursor.fetchall()
-
 		query = '''SELECT * FROM Photo INNER JOIN Contain ON Contain.picid=Photo.picid WHERE Contain.albumid=''' + "'" + albumid + "'"
 		cursor.execute(query)
 		pics = cursor.fetchall()
-
 		query = '''SELECT albumid FROM Album WHERE albumid=''' + "'" + albumid + "' AND access='public'"
 		cursor.execute(query)
 		public_albums = cursor.fetchall()
 		if len(public_albums) > 0:
 			private = "no"
-
 		return render_template("editalbum.html", pics = pics, albumid = albumid, accessors = accessors, username = username, private = private, login = "yes")
 	return render_template("login.html", login = "no")
-
 	#return render_template("editalbum.html", pics = pics, pics_in_album = pics_in_album, albumid = albumid)
-
 @app.route('/ilrj0i/pa3/pic/caption', methods=['GET'])
 def pic_caption_get():
-
 	InvalidPicIDError = ''
 	try:
 		picid = request.args.get('id')
@@ -870,11 +760,8 @@ def pic_caption_get():
 		response.status_code = 422
 		return response
 	return json.jsonify(caption=caption)
-
-
 @app.route('/ilrj0i/pa3/pic/caption', methods=['POST'])
 def pic_caption_post():
-
 	InvalidPicIDError = ''
 	req_json = request.get_json()
 	cursor = mysql.connection.cursor()
@@ -892,7 +779,6 @@ def pic_caption_post():
 		response = json.jsonify(error='You did not provide a caption parameter.', status=404)
 		response.status_code = 404
 		return response
-
 	#need to test to make sure that picid exists in db
 	"""query = "SELECT picid WHERE picid='%s';" % (picid)
 	cursor.execute(query)
@@ -902,7 +788,6 @@ def pic_caption_post():
 		response = json.jsonify(error='Invalid id. The picid does not exist.', status=404)
 		response.status_code = 422
 		return response"""
-
 	try:
 		query = "UPDATE Contain SET caption='%s' WHERE picid='%s';" % (caption, picid)
 		cursor.execute(query)
@@ -915,7 +800,6 @@ def pic_caption_post():
 	response = json.jsonify(caption=caption, status=201)
 	response.status_code = 201
 	return response
-
 @app.route('/ilrj0i/pa3/pic/favorites', methods=['GET'])
 def favorites_get():
 	try:
@@ -925,7 +809,6 @@ def favorites_get():
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
 		return response
-
 	cursor = mysql.connection.cursor()
 	query = '''SELECT * FROM Favorite WHERE picid=''' + "'" + picid + "'"
 	cursor.execute(query)
@@ -950,7 +833,6 @@ def favorites_get():
 	}
 	#print(data['num_favorites'])
 	return json.jsonify(data=data)
-
 def malformed_request():
 	error = {
 				"status": "400",
@@ -958,7 +840,6 @@ def malformed_request():
 				"detail": "Your request could not be parsed. Please verify it is a valid JSON object."
 			}
 	return error
-
 def comment_to_jsonapi(comment):
 	rv = {
 			"type": "comments",
@@ -969,7 +850,6 @@ def comment_to_jsonapi(comment):
 	del attributes["commentid"]
 	rv["attributes"] = attributes
 	return rv
-
 @app.route('/ilrj0i/pa3/pic/favorites', methods=['POST'])
 def favorites_post():
 	InvalidPicIDError = ''
@@ -980,13 +860,10 @@ def favorites_post():
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 404
 		return response
-
 	cursor = mysql.connection.cursor()
 	picid = req_json.get('id')
 	username = req_json.get('username')
-
 	query = '''SELECT * FROM Favorite WHERE username=''' + "'" + username + "' AND picid=" + "'" + picid + "'"
-	print(query)
 	cursor.execute(query)
 	favorited_users = cursor.fetchall()
 	if len(favorited_users) > 0:
@@ -1005,41 +882,33 @@ def favorites_post():
 		response = json.jsonify(error='You did not provide a username parameter.', status=404)
 		response.status_code = 404
 		return response
-
 	try:
 		query = '''INSERT INTO Favorite (picid, username) VALUES (''' + "'" + picid + "', '" + username + "')"
 		cursor.execute(query)
 		mysql.connection.commit()
-
 	except InvalidPicIDError as e:
 		response = json.jsonify(error='Invalid id. The picid does not exist.', status=422)
 		response.status_code = 422
 		return response
-
 	except InvalidUsernameError as e:
 		response = json.jsonify(error= 'Invalid username. The username does not exist.', status=422)
 		response.status_code = 422
 		return response
-
 	response = json.jsonify(id=picid, status=201)
 	response.status_code = 201
 	#return json.jsonify(data=data)
 	return response
-
 @app.route('/ilrj0i/pa3/pic/live')
 def live_route():
 	return send_file('views/live.html')
-
 @app.route('/ilrj0i/pa3/pic/favorites/<int:id>')
 def favorites(id):
-
     try:
         favorite = get_favorite_by_id(id)
     except RecordNotFound as e:
         response = json.jsonify(errors=[e.to_json()])
         response.status_code = 404
         return response
-
     data = {
         "type": "favorites",
         "id": id,
@@ -1049,7 +918,6 @@ def favorites(id):
         }
     }
     return json.jsonify(data=data)
-
 @app.route('/ilrj0i/pa3/pic/comments/<int:commentid>', methods=['GET'])
 def get_comment(commentid):
 	try:
@@ -1059,9 +927,7 @@ def get_comment(commentid):
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = e.status_code
 		return response
-
 	return json.jsonify(data=comment)
-
 @app.route('/ilrj0i/pa3/pic/comments', methods=['POST'])
 def post_comment():
 	try:
@@ -1075,11 +941,9 @@ def post_comment():
 	except JSONAPIException as e:
 		response = json.jsonify(errors=[e.to_json()])
 		response.status_code = 422
-
 	response = json.jsonify(data=data)
 	response.status_code = 201
 	return response
-
 def malformed_request():
 	error = {
 				"status": "400",
@@ -1087,7 +951,6 @@ def malformed_request():
 				"detail": "Your request could not be parsed. Please verify it is a valid JSON object."
 			}
 	return error
-
 def comment_to_jsonapi(comment):
 	rv = {
 			"type": "comments",
@@ -1098,11 +961,8 @@ def comment_to_jsonapi(comment):
 	del attributes["commentid"]
 	rv["attributes"] = attributes
 	return rv
-
-
 #app.secret_key = os.urandom(24)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
 if __name__ == '__main__':
 	app.run(debug=True)
 		# listen on external IPs
